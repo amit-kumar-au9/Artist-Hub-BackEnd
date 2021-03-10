@@ -1,17 +1,23 @@
 const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 6700;
 const mongoose = require('mongoose');
+const PORT = process.env.PORT || 6700;
+const { mongo_url } = require('./utils/config');
+// import routes
+const userAuthRouter = require('./routes/userAuthRouter');
 
+const app = express();
 app.use(express.json());
 
-app.get('health', (req, res) => {
+app.get('/health', (req, res) => {
 	return res.json({ message: 'Health OK' });
 });
 
+// route middleware
+app.use('/auth', userAuthRouter);
+
 // CONNECT TO DB
 mongoose.connect(
-	'mongodb+srv://admin:mongo123@cluster0.pwmth.mongodb.net/jwt_user?retryWrites=true&w=majority',
+	mongo_url,
 	{ useNewUrlParser: true, useUnifiedTopology: true },
 	(err) => {
 		if (err) throw err;
@@ -19,7 +25,15 @@ mongoose.connect(
 	},
 );
 
-server.listen(PORT, (err) => {
+app.use(function (err, req, res, next) {
+	res.json({
+		message: 'Error',
+		status: 500,
+		error: err,
+	});
+});
+
+app.listen(PORT, (err) => {
 	if (err) throw err;
 	console.log(`Server is running at port ${PORT}`);
 });
