@@ -4,14 +4,10 @@ const ratingSchema = new mongoose.Schema({
 	postId: {
 		type: String,
 		required: true,
-		min: 6,
-		max: 255,
 	},
 	userId: {
 		type: String,
 		required: true,
-		min: 6,
-		max: 255,
 	},
 	rating: {
 		type: Number,
@@ -23,4 +19,4 @@ const ratingSchema = new mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('post', ratingSchema);
+module.exports = mongoose.model('ratings', ratingSchema);

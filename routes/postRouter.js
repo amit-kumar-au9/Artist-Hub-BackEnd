@@ -1,10 +1,19 @@
 const Router = require('express').Router();
 
-const { addPost } = require('../controllers/postController');
-const authChecker = require('../auth/isAuth');
+const {
+	addPost,
+	updatePost,
+	getPost,
+	getPostByUser,
+	deletePost,
+} = require('../controllers/postController');
 
 const { newPostValidation } = require('../validations/postValidation');
 
-Router.post('/addPost', authChecker, newPostValidation, addPost);
+Router.post('/addPost', newPostValidation, addPost);
+Router.post('/updatePost/:postId', newPostValidation, updatePost);
+Router.get('/getPostDetail/:postId', getPost);
+Router.get('/getPostByUser/:userId', getPostByUser);
+Router.get('/deletePost/:postId', deletePost);
 
 module.exports = Router;

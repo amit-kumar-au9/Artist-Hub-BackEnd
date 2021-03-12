@@ -1,4 +1,12 @@
-exports.mongo_url =
-	'mongodb+srv://user:user123@main-cluster.rkrox.mongodb.net/artist-hub?retryWrites=true&w=majority';
+const dotenv = require('dotenv');
+dotenv.config();
 
-exports.secret = 'secret_54321';
+exports.mongo_url = process.env.MONGO_URL;
+
+exports.secret = process.env.JWT_SECRET_KEY;
+
+exports.cloudinary_config = {
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+};
