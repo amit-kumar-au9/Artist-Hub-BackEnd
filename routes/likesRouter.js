@@ -7,11 +7,9 @@ const {
 	getlikeCounts,
 } = require('../controllers/likesController');
 
-const authChecker = require('../auth/isAuth');
-
-Router.get('/addLike/:postId', authChecker, addLike);
-Router.get('/unLike/:postId', authChecker, unLike);
-Router.get('/getLikes/:postId', authChecker, getLikes);
-Router.get('/getlikeCounts/:postId', authChecker, getlikeCounts);
+Router.get('/addLike/:postId', addLike);
+Router.get('/unLike/:postId', unLike);
+Router.get('/getLikes/:postId', getLikes);
+Router.get('/getlikeCounts/:postId', getlikeCounts);
 
 module.exports = Router;

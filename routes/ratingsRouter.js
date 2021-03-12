@@ -5,13 +5,13 @@ const {
 	updateRating,
 	deleteRating,
 	getRatings,
+	getAvgRatings,
 } = require('../controllers/ratingsController');
 
-const authChecker = require('../auth/isAuth');
-
-Router.get('/addRating/:postId', authChecker, addRating);
-Router.get('/updateRating/:postId', authChecker, updateRating);
-Router.get('/deleteRating/:postId', authChecker, deleteRating);
-Router.get('/getRatings/:postId', authChecker, getRatings);
+Router.get('/addRating/:postId', addRating);
+Router.get('/updateRating/:ratingId', updateRating);
+Router.get('/deleteRating/:ratingId', deleteRating);
+Router.get('/getRatings/:postId', getRatings);
+Router.get('/getAvgRatings/:postId', getAvgRatings);
 
 module.exports = Router;

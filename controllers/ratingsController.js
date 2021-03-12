@@ -1,16 +1,17 @@
-const postModel = require('../models/postModel');
+const ratingsModel = require('../models/ratingsModel');
 
 exports.addRating = (req, res, next) => {
 	try {
 		const data = {
 			userId: req.userData._id,
-			location: req.body.location,
-			occassion: req.body.occassion,
-			caption: req.body.caption,
-			description: req.body.description,
-			tags: req.body.tags,
+			postId: req.params.postId,
+			rating: req.query.rating,
 		};
-		postModel.addPost(data, (err, response) => {
+		const findBy = {
+			userId: req.userData._id,
+			postId: req.params.postId,
+		};
+		ratingsModel.addRating(findBy, data, (err, response) => {
 			if (err) throw err;
 			return res.json(response);
 		});
@@ -19,9 +20,19 @@ exports.addRating = (req, res, next) => {
 	}
 };
 
+exports.getAvgRatings = (req, res, next) => {
+	try {
+		ratingsModel.getAvgRatings(req.params.postId, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};
 exports.getRatings = (req, res, next) => {
 	try {
-		postModel.getPost(req.params.postId, (err, reply) => {
+		ratingsModel.getRatings(req.params.postId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -32,10 +43,14 @@ exports.getRatings = (req, res, next) => {
 
 exports.updateRating = (req, res, next) => {
 	try {
-		postModel.getPost(req.params.postId, (err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
+		ratingsModel.updateRating(
+			req.params.ratingId,
+			{ rating: req.query.rating },
+			(err, reply) => {
+				if (err) throw err;
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -43,7 +58,7 @@ exports.updateRating = (req, res, next) => {
 
 exports.deleteRating = (req, res, next) => {
 	try {
-		postModel.deletePost(req.params.postId, (err, reply) => {
+		ratingsModel.deleteRating(req.params.ratingId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
