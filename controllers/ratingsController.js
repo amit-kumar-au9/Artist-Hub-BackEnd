@@ -1,6 +1,6 @@
 const postModel = require('../models/postModel');
 
-exports.addPost = (req, res, next) => {
+exports.addRating = (req, res, next) => {
 	try {
 		const data = {
 			userId: req.userData._id,
@@ -19,25 +19,7 @@ exports.addPost = (req, res, next) => {
 	}
 };
 
-exports.updatePost = (req, res, next) => {
-	try {
-		const data = {
-			location: req.body.location,
-			occassion: req.body.occassion,
-			caption: req.body.caption,
-			description: req.body.description,
-			tags: req.body.tags,
-		};
-		postModel.updatePost(req.params.postId, data, (err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
-exports.getPost = (req, res, next) => {
+exports.getRatings = (req, res, next) => {
 	try {
 		postModel.getPost(req.params.postId, (err, reply) => {
 			if (err) throw err;
@@ -48,9 +30,9 @@ exports.getPost = (req, res, next) => {
 	}
 };
 
-exports.getPostByUser = (req, res, next) => {
+exports.updateRating = (req, res, next) => {
 	try {
-		postModel.getPostByUser(req.params.userId, (err, reply) => {
+		postModel.getPost(req.params.postId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -59,7 +41,7 @@ exports.getPostByUser = (req, res, next) => {
 	}
 };
 
-exports.deletePost = (req, res, next) => {
+exports.deleteRating = (req, res, next) => {
 	try {
 		postModel.deletePost(req.params.postId, (err, reply) => {
 			if (err) throw err;

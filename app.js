@@ -3,10 +3,12 @@ const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
 const PORT = process.env.PORT || 6700;
 const { mongo_url } = require('./utils/config');
+
 // import routes
 const userAuthRouter = require('./routes/userAuthRouter');
 const postRouter = require('./routes/postRouter');
 const imageRouter = require('./routes/imageRouter');
+const likeRouter = require('./routes/likesRouter');
 
 const app = express();
 app.use(express.json());
@@ -20,6 +22,7 @@ app.get('/health', (req, res) => {
 app.use('/auth', userAuthRouter);
 app.use('/post', postRouter);
 app.use('/image', imageRouter);
+app.use('/like', likeRouter);
 
 // CONNECT TO DB
 mongoose
@@ -32,7 +35,7 @@ mongoose
 	.then(() => console.log('MongoDB connected'))
 	.catch((err) => console.log(err));
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
 	res.json({
 		message: 'Error',
 		status: 500,

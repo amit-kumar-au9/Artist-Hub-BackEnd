@@ -12,8 +12,8 @@ const authChecker = require('../auth/isAuth');
 const { ImageValidation } = require('../validations/imageValidation');
 
 Router.post('/addImage', authChecker, ImageValidation, addImage);
-Router.post('/updateImages', authChecker, updateImage);
-Router.post('/deleteImages', authChecker, deleteImage);
+Router.post('/updateImage', authChecker, ImageValidation, updateImage);
+Router.post('/deleteImage', authChecker, deleteImage);
 Router.get('/getImages/:postId', authChecker, getPostImages);
 
 module.exports = Router;

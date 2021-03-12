@@ -16,5 +16,5 @@ exports.postSchema = Joi.object({
 	occassion: Joi.string().min(1).required(),
 	caption: Joi.string().min(1).required(),
 	description: Joi.string().min(1).required(),
-	tags: Joi.string().min(6),
+	tags: Joi.array().min(1),
 });
