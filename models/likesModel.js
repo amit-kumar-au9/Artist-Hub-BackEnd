@@ -76,7 +76,6 @@ exports.unLike = (data, callback) => {
 					callback('', {
 						message: 'Post unliked',
 						status: 200,
-						data: reply,
 					});
 				} else {
 					callback('', {

@@ -1,16 +1,13 @@
-const postModel = require('../models/postModel');
+const commentsModel = require('../models/commentsModel');
 
 exports.addComment = (req, res, next) => {
 	try {
 		const data = {
+			postId: req.params.postId,
 			userId: req.userData._id,
-			location: req.body.location,
-			occassion: req.body.occassion,
-			caption: req.body.caption,
-			description: req.body.description,
-			tags: req.body.tags,
+			comment: req.body.comment,
 		};
-		postModel.addPost(data, (err, response) => {
+		commentsModel.addComment(data, (err, response) => {
 			if (err) throw err;
 			return res.json(response);
 		});
@@ -21,7 +18,7 @@ exports.addComment = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
 	try {
-		postModel.getPost(req.params.postId, (err, reply) => {
+		commentsModel.getComments(req.params.postId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -30,9 +27,9 @@ exports.getComments = (req, res, next) => {
 	}
 };
 
-exports.updateComment = (req, res, next) => {
+exports.getCommentsCounts = (req, res, next) => {
 	try {
-		postModel.getPost(req.params.postId, (err, reply) => {
+		commentsModel.getCommentsCounts(req.params.postId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -43,10 +40,28 @@ exports.updateComment = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
 	try {
-		postModel.deletePost(req.params.postId, (err, reply) => {
+		commentsModel.deleteComment(req.params.commentId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.updateComment = (req, res, next) => {
+	try {
+		const data = {
+			comment: req.body.comment,
+		};
+		commentsModel.updateComment(
+			req.params.commentId,
+			data,
+			(err, reply) => {
+				if (err) throw err;
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		next(error);
 	}

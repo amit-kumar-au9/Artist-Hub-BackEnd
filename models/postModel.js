@@ -71,7 +71,6 @@ exports.updatePost = (postId, data, callback) => {
 					callback('', {
 						message: 'Post data updated',
 						status: 200,
-						data: reply,
 					});
 				} else {
 					callback('', {

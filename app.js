@@ -9,6 +9,7 @@ const userAuthRouter = require('./routes/userAuthRouter');
 const postRouter = require('./routes/postRouter');
 const imageRouter = require('./routes/imageRouter');
 const likeRouter = require('./routes/likesRouter');
+const commnetRouter = require('./routes/commentsRouter');
 
 const app = express();
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use('/auth', userAuthRouter);
 app.use('/post', postRouter);
 app.use('/image', imageRouter);
 app.use('/like', likeRouter);
+app.use('/comment', commnetRouter);
 
 // CONNECT TO DB
 mongoose

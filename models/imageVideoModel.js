@@ -45,7 +45,6 @@ exports.updateImage = (findBy, data, callback) => {
 			return callback('', {
 				message: 'Image updated',
 				status: 200,
-				data: reply,
 			});
 		});
 	} catch (error) {

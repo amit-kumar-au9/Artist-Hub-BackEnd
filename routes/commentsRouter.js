@@ -5,13 +5,15 @@ const {
 	updateComment,
 	deleteComment,
 	getComments,
+	getCommentsCounts,
 } = require('../controllers/commentsController');
 
 const authChecker = require('../auth/isAuth');
 
-Router.get('/addComment/:postId', authChecker, addComment);
-Router.get('/updateComment/:postId', authChecker, updateComment);
-Router.get('/deleteComment/:postId', authChecker, deleteComment);
+Router.post('/addComment/:postId', authChecker, addComment);
+Router.post('/updateComment/:commentId', authChecker, updateComment);
+Router.get('/deleteComment/:commentId', authChecker, deleteComment);
 Router.get('/getComments/:postId', authChecker, getComments);
+Router.get('/getCommentsCounts/:postId', authChecker, getCommentsCounts);
 
 module.exports = Router;
