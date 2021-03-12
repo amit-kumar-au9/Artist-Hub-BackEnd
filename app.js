@@ -9,8 +9,8 @@ const postRouter = require('./routes/postRouter');
 const imageRouter = require('./routes/imageRouter');
 
 const app = express();
-app.use(fileUpload());
 app.use(express.json());
+app.use(fileUpload({ useTempFiles: true }));
 
 app.get('/health', (req, res) => {
 	return res.json({ message: 'Health OK' });
@@ -22,14 +22,15 @@ app.use('/post', postRouter);
 app.use('/image', imageRouter);
 
 // CONNECT TO DB
-mongoose.connect(
-	mongo_url,
-	{ useNewUrlParser: true, useUnifiedTopology: true },
-	(err) => {
-		if (err) throw err;
-		console.log('connected to db');
-	},
-);
+mongoose
+	.connect(mongo_url, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+		useFindAndModify: false,
+	})
+	.then(() => console.log('MongoDB connected'))
+	.catch((err) => console.log(err));
 
 app.use(function (err, req, res, next) {
 	res.json({

@@ -1,27 +1,25 @@
 const imageModel = require('../models/imageVideoModel');
 
-const generateRandomString = (length = 8) =>
-	Math.random().toString(20).substr(2, length);
+const cloudinary = require('../utils/cloudinary');
 
-exports.addImage = (req, res) => {
-	const imageFile = req.files.imageFile;
-	let imageFileName = `${generateRandomString()}${imageFile.name}`;
-	imageFile.mv(`./public/images/${imageFileName}`, (err, _) => {
-		if (err)
-			return res
-				.status(500)
-				.json({ message: 'Server error', error: err });
-		const data = {
-			postId: req.body.postId,
-			file_path: imageFileName,
-			isImage: req.body.isImage,
-		};
-		imageModel.addImage(data, (err) => {
-			if (err)
-				return res
-					.status(500)
-					.json({ message: 'Mongo error', error: err });
-			return res.json({ message: 'File Uploaded' });
+exports.addImage = (req, res, next) => {
+	try {
+		const imageFile = req.files.imageFile;
+		cloudinary.uploader.upload(imageFile.tempFilePath, (err, reply) => {
+			console.log(reply);
+			if (err) throw err;
+			const data = {
+				postId: req.body.postId,
+				file_path: reply.secure_url,
+				cloudinary_id: reply.public_id,
+				isImage: req.body.isImage,
+			};
+			imageModel.addImage(data, (err) => {
+				if (err) throw err;
+				return res.json({ message: 'File Uploaded', status: 200 });
+			});
 		});
-	});
+	} catch (err) {
+		next(err);
+	}
 };
