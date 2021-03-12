@@ -1,10 +1,6 @@
-const Joi = require('joi');
+const { loginSchema, registerSchema } = require('./validationSchema');
 
 exports.loginValidation = (req, res, next) => {
-	const loginSchema = Joi.object({
-		email: Joi.string().min(6).required().email(),
-		password: Joi.string().min(6).required(),
-	});
 	const { error } = loginSchema.validate(req.body);
 	if (error) {
 		return res.json({
@@ -17,11 +13,6 @@ exports.loginValidation = (req, res, next) => {
 };
 
 exports.registerValidation = (req, res, next) => {
-	const registerSchema = Joi.object({
-		name: Joi.string().min(6).required(),
-		email: Joi.string().min(6).required().email(),
-		password: Joi.string().min(6).required(),
-	});
 	const { error } = registerSchema.validate(req.body);
 	if (error) {
 		return res.json({
