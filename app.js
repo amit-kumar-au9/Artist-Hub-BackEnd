@@ -7,7 +7,7 @@ const { mongo_url } = require('./utils/config');
 
 const authChecker = require('./auth/isAuth');
 // import routes
-const userAuthRouter = require('./routes/userAuthRouter');
+const userAuthRouter = require('./routes/authRouter');
 const postRouter = require('./routes/postRouter');
 const imageRouter = require('./routes/imageRouter');
 const likeRouter = require('./routes/likesRouter');

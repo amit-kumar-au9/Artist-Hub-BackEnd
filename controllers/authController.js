@@ -2,15 +2,24 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../utils/config');
 
-const userAuthModel = require('../models/userAuthModel');
+const userAuthModel = require('../models/authModel');
 
 exports.registerUser = (req, res, next) => {
 	try {
-		const data = {
+		var data = {
 			name: req.body.name,
 			email: req.body.email,
 			password: bcrypt.hashSync(req.body.password, 8),
+			type: req.body.type || 'user',
 		};
+		if (req.body.type === 'artist') {
+			var data = {
+				...data,
+				coverPic: req.body.coverPic || '',
+				shortDesc: req.body.shortDesc || '',
+				occassions: req.body.occassions || [],
+			};
+		}
 
 		userAuthModel.registerUser(data, (err, response) => {
 			if (err) throw err;
