@@ -1,6 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const PORT = process.env.PORT || 6700;
 const { mongo_url } = require('./utils/config');
 
@@ -14,8 +15,9 @@ const commentRouter = require('./routes/commentsRouter');
 const ratingRouter = require('./routes/ratingsRouter');
 
 const app = express();
-app.use(express.json());
-app.use(fileUpload({ useTempFiles: true }));
+app.use(cors()); //enable cors
+app.use(express.json()); //enable json
+app.use(fileUpload({ useTempFiles: true })); //enable file upload
 
 app.get('/health', (req, res) => {
 	return res.json({ message: 'Health OK' });
@@ -40,6 +42,7 @@ mongoose
 	.then(() => console.log('MongoDB connected'))
 	.catch((err) => console.log(err));
 
+// default error handler of express
 app.use((err, req, res, next) => {
 	res.json({
 		message: 'Error',
