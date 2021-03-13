@@ -30,6 +30,10 @@ const postSchema = new mongoose.Schema({
 		required: true,
 		default: 1,
 	},
+	isPinned: {
+		type: Boolean,
+		default: false,
+	},
 	date: {
 		type: Date,
 		default: Date.now,

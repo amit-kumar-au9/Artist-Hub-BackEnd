@@ -62,10 +62,10 @@ exports.getPostByUser = (userId, callback) => {
 	}
 };
 
-exports.updatePost = (postId, data, callback) => {
+exports.updatePost = (updateFor, data, callback) => {
 	try {
 		postSchema
-			.findByIdAndUpdate(postId, data)
+			.findOneAndUpdate(updateFor, data)
 			.then((reply) => {
 				if (reply) {
 					callback('', {
@@ -74,7 +74,7 @@ exports.updatePost = (postId, data, callback) => {
 					});
 				} else {
 					callback('', {
-						message: 'Post not found',
+						message: 'Post not found for logged in user',
 						status: 400,
 					});
 				}
@@ -85,22 +85,119 @@ exports.updatePost = (postId, data, callback) => {
 	}
 };
 
-exports.deletePost = (postId, callback) => {
+exports.deletePost = (deleteFor, callback) => {
 	try {
-		postSchema.findByIdAndUpdate(postId, { active: 0 }).then((reply) => {
-			if (reply) {
-				callback('', {
-					message: 'Post deleted',
-					status: 200,
-					data: reply,
-				});
-			} else {
-				callback('', {
-					message: 'Post not found',
-					status: 400,
-				});
-			}
-		});
+		postSchema
+			.findOneAndUpdate(deleteFor, { active: 0 })
+			.then((reply) => {
+				if (reply) {
+					callback('', {
+						message: 'Post deleted',
+						status: 200,
+						data: reply,
+					});
+				} else {
+					callback('', {
+						message: 'Post not found for logged in user',
+						status: 400,
+					});
+				}
+			})
+			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.pinPost = (pinFor, callback) => {
+	try {
+		postSchema
+			.findOneAndUpdate(pinFor, { isPinned: true })
+			.then((reply) => {
+				if (reply) {
+					callback('', {
+						message: 'Post pinned',
+						status: 200,
+					});
+				} else {
+					callback('', {
+						message: 'Post not found for logged in user',
+						status: 400,
+					});
+				}
+			})
+			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.unpinPost = (unpinFor, callback) => {
+	try {
+		postSchema
+			.findOneAndUpdate(unpinFor, { isPinned: false })
+			.then((reply) => {
+				if (reply) {
+					callback('', {
+						message: 'Post unpinned',
+						status: 200,
+					});
+				} else {
+					callback('', {
+						message: 'Post not found for logged in user',
+						status: 400,
+					});
+				}
+			})
+			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getPinnedPostByUser = (userId, callback) => {
+	try {
+		postSchema
+			.find({ userId: userId, isPinned: true })
+			.then((reply) => {
+				if (reply.length) {
+					callback('', {
+						message: 'All pinned post send',
+						status: 200,
+						data: reply,
+					});
+				} else {
+					callback('', {
+						message: 'No pinned post found',
+						status: 400,
+					});
+				}
+			})
+			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getAllPost = (callback) => {
+	try {
+		postSchema
+			.find()
+			.then((reply) => {
+				if (reply.length) {
+					callback('', {
+						message: 'All post send',
+						status: 200,
+						data: reply,
+					});
+				} else {
+					callback('', {
+						message: 'No post found',
+						status: 400,
+					});
+				}
+			})
+			.catch((err) => callback(err));
 	} catch (error) {
 		callback(error);
 	}

@@ -28,7 +28,11 @@ exports.updatePost = (req, res, next) => {
 			description: req.body.description,
 			tags: req.body.tags,
 		};
-		postModel.updatePost(req.params.postId, data, (err, reply) => {
+		const updateFor = {
+			_id: req.params.postId,
+			userId: req.userData._id,
+		};
+		postModel.updatePost(updateFor, data, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -61,7 +65,63 @@ exports.getPostByUser = (req, res, next) => {
 
 exports.deletePost = (req, res, next) => {
 	try {
-		postModel.deletePost(req.params.postId, (err, reply) => {
+		const deleteFor = {
+			_id: req.params.postId,
+			userId: req.userData._id,
+		};
+		postModel.deletePost(deleteFor, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.pinPost = (req, res, next) => {
+	try {
+		const pinFor = {
+			_id: req.params.postId,
+			userId: req.userData._id,
+		};
+		postModel.pinPost(pinFor, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.unpinPost = (req, res, next) => {
+	try {
+		const unpinFor = {
+			_id: req.params.postId,
+			userId: req.userData._id,
+		};
+		postModel.unpinPost(unpinFor, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getPinnedPostByUser = (req, res, next) => {
+	try {
+		postModel.getPinnedPostByUser(req.userData._id, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getAllPost = (req, res, next) => {
+	try {
+		postModel.getAllPost((err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
