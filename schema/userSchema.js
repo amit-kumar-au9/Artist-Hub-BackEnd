@@ -21,11 +21,19 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		default: '',
 	},
+	profilePicId: {
+		type: String,
+		required: false,
+	},
 	isActive: {
 		type: Number,
 		default: 1,
 	},
 	coverPic: {
+		type: String,
+		required: false,
+	},
+	coverPicId: {
 		type: String,
 		required: false,
 	},
