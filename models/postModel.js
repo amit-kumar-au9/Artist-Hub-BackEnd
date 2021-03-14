@@ -182,7 +182,36 @@ exports.getPinnedPostByUser = (userId, callback) => {
 exports.getAllPost = (callback) => {
 	try {
 		postSchema
-			.find()
+			.aggregate([
+				{ $match: { active: 1 } },
+				{
+					$lookup: {
+						from: 'users',
+						pipeline: [
+							{
+								$project: {
+									_id: 0,
+									profilePic: 1,
+									name: 1,
+								},
+							},
+						],
+						as: 'userInfo',
+					},
+				},
+				{
+					$unwind: {
+						path: '$userInfo',
+					},
+				},
+				{
+					$project: {
+						isPinned: 0,
+						__v: 0,
+						active: 0,
+					},
+				},
+			])
 			.then((reply) => {
 				if (reply.length) {
 					callback('', {
