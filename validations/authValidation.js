@@ -1,4 +1,8 @@
-const { loginSchema, registerSchema } = require('./validationSchema');
+const {
+	loginSchema,
+	userRegisterSchema,
+	artistRegisterSchema,
+} = require('./validationSchema');
 
 exports.loginValidation = (req, res, next) => {
 	const { error } = loginSchema.validate(req.body);
@@ -13,7 +17,11 @@ exports.loginValidation = (req, res, next) => {
 };
 
 exports.registerValidation = (req, res, next) => {
-	const { error } = registerSchema.validate(req.body);
+	if (req.body.type === 'artist') {
+		var { error } = artistRegisterSchema.validate(req.body);
+	} else {
+		var { error } = userRegisterSchema.validate(req.body);
+	}
 	if (error) {
 		return res.json({
 			message: 'Register failed',

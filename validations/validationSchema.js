@@ -5,10 +5,18 @@ exports.loginSchema = Joi.object({
 	password: Joi.string().min(6).required(),
 });
 
-exports.registerSchema = Joi.object({
+exports.userRegisterSchema = Joi.object({
 	name: Joi.string().min(6).required(),
 	email: Joi.string().min(6).required().email(),
 	password: Joi.string().min(6).required(),
+});
+
+exports.artistRegisterSchema = Joi.object({
+	name: Joi.string().min(6).required(),
+	email: Joi.string().min(6).required().email(),
+	password: Joi.string().min(6).required(),
+	occassions: Joi.array().min(1).required(),
+	type: Joi.string().required(),
 });
 
 exports.postSchema = Joi.object({

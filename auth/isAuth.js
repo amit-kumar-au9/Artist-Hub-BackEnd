@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { secret } = require('../utils/config');
-const { getUserDetail } = require('../models/userAuthModel');
+const { getUserDetail } = require('../models/authModel');
 
 const authChecker = (req, res, next) => {
 	const token = req.header('auth-token');

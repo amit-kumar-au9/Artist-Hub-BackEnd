@@ -7,12 +7,13 @@ const { mongo_url } = require('./utils/config');
 
 const authChecker = require('./auth/isAuth');
 // import routes
-const userAuthRouter = require('./routes/userAuthRouter');
+const userAuthRouter = require('./routes/authRouter');
 const postRouter = require('./routes/postRouter');
 const imageRouter = require('./routes/imageRouter');
 const likeRouter = require('./routes/likesRouter');
 const commentRouter = require('./routes/commentsRouter');
 const ratingRouter = require('./routes/ratingsRouter');
+const artistProfileRouter = require('./routes/artistProfileRouter');
 
 const app = express();
 app.use(cors()); //enable cors
@@ -30,6 +31,7 @@ app.use('/image', authChecker, imageRouter);
 app.use('/like', authChecker, likeRouter);
 app.use('/comment', authChecker, commentRouter);
 app.use('/rating', authChecker, ratingRouter);
+app.use('/artist', authChecker, artistProfileRouter);
 
 // CONNECT TO DB
 mongoose
