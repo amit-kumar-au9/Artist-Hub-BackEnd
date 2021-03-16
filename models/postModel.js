@@ -14,7 +14,30 @@ exports.addPost = (postData, callback) => {
 	}
 };
 
-exports.getPost = (postId, callback) => {
+exports.updatePost = (updateFor, data, callback) => {
+	try {
+		postSchema
+			.findOneAndUpdate(updateFor, data)
+			.then((reply) => {
+				if (reply) {
+					callback('', {
+						message: 'Post data updated',
+						status: 200,
+					});
+				} else {
+					callback('', {
+						message: 'Post not found for logged in user',
+						status: 400,
+					});
+				}
+			})
+			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getPostDetailByPostId = (postId, callback) => {
 	try {
 		postSchema
 			.find({ _id: postId, active: 1 })
@@ -38,7 +61,7 @@ exports.getPost = (postId, callback) => {
 	}
 };
 
-exports.getPostByUser = (userId, callback) => {
+exports.geAllPostByUser = (userId, callback) => {
 	try {
 		postSchema
 			.find({ userId: userId, active: 1 })
@@ -52,29 +75,6 @@ exports.getPostByUser = (userId, callback) => {
 				} else {
 					callback('', {
 						message: 'No post found for user',
-						status: 400,
-					});
-				}
-			})
-			.catch((err) => callback(err));
-	} catch (error) {
-		callback(error);
-	}
-};
-
-exports.updatePost = (updateFor, data, callback) => {
-	try {
-		postSchema
-			.findOneAndUpdate(updateFor, data)
-			.then((reply) => {
-				if (reply) {
-					callback('', {
-						message: 'Post data updated',
-						status: 200,
-					});
-				} else {
-					callback('', {
-						message: 'Post not found for logged in user',
 						status: 400,
 					});
 				}
@@ -155,7 +155,7 @@ exports.unpinPost = (unpinFor, callback) => {
 	}
 };
 
-exports.getPinnedPostByUser = (userId, callback) => {
+exports.getAllPinnedPostByUser = (userId, callback) => {
 	try {
 		postSchema
 			.find({ userId: userId, isPinned: true })

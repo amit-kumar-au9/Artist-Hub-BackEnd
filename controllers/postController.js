@@ -41,9 +41,9 @@ exports.updatePost = (req, res, next) => {
 	}
 };
 
-exports.getPost = (req, res, next) => {
+exports.getPostDetailByPostId = (req, res, next) => {
 	try {
-		postModel.getPost(req.params.postId, (err, reply) => {
+		postModel.getPostDetailByPostId(req.params.postId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -52,9 +52,9 @@ exports.getPost = (req, res, next) => {
 	}
 };
 
-exports.getPostByUser = (req, res, next) => {
+exports.geAllPostByUser = (req, res, next) => {
 	try {
-		postModel.getPostByUser(req.params.userId, (err, reply) => {
+		postModel.geAllPostByUser(req.params.userId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -108,9 +108,9 @@ exports.unpinPost = (req, res, next) => {
 	}
 };
 
-exports.getPinnedPostByUser = (req, res, next) => {
+exports.getAllPinnedPostByUser = (req, res, next) => {
 	try {
-		postModel.getPinnedPostByUser(req.userData._id, (err, reply) => {
+		postModel.getAllPinnedPostByUser(req.userData._id, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
