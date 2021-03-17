@@ -18,7 +18,7 @@ Router.get('/getDetails', getDetails);
 
 // gallery posts
 Router.get('/getAllPostByUser/:userId', getAllPostByUser);
-Router.get('/getPinnedPostByUser', getAllPinnedPostByUser);
+Router.get('/getPinnedPostByUser/:userId', getAllPinnedPostByUser);
 Router.get('/getMostRatedPostByUserId/:userId', getMostRatedPostByUserId);
 
 module.exports = Router;

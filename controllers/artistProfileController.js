@@ -159,7 +159,7 @@ exports.getAllPostByUser = (req, res, next) => {
 exports.getAllPinnedPostByUser = (req, res, next) => {
 	try {
 		artistProfileModel.getAllPinnedPostByUser(
-			req.userData._id,
+			req.params.userId,
 			(err, reply) => {
 				if (err) throw err;
 				return res.json(reply);

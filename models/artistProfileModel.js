@@ -26,7 +26,59 @@ exports.getDetails = (userId, callback) => {
 exports.getAllPostByUser = (userId, callback) => {
 	try {
 		postSchema
-			.find({ userId: userId, active: 1 })
+			.aggregate([
+				{
+					$match: {
+						userId: userId,
+					},
+				},
+				{
+					$addFields: {
+						postId: {
+							$toString: '$_id',
+						},
+					},
+				},
+				{
+					$lookup: {
+						from: 'postfiles',
+						let: {
+							post_id: '$postId',
+						},
+						pipeline: [
+							{
+								$match: {
+									$expr: {
+										$eq: ['$postId', '$$post_id'],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$postId',
+									files: {
+										$push: '$file_path',
+									},
+								},
+							},
+						],
+						as: 'all_files',
+					},
+				},
+				{
+					$sort: { date: -1 },
+				},
+				{
+					$project: {
+						postId: 1,
+						_id: 0,
+						'all_files.files': 1,
+					},
+				},
+				{
+					$unwind: '$all_files',
+				},
+			])
 			.then((data) => {
 				if (data.length != 0) {
 					callback('', {
@@ -50,7 +102,60 @@ exports.getAllPostByUser = (userId, callback) => {
 exports.getAllPinnedPostByUser = (userId, callback) => {
 	try {
 		postSchema
-			.find({ userId: userId, isPinned: true })
+			.aggregate([
+				{
+					$match: {
+						userId: userId,
+						isPinned: true,
+					},
+				},
+				{
+					$addFields: {
+						postId: {
+							$toString: '$_id',
+						},
+					},
+				},
+				{
+					$lookup: {
+						from: 'postfiles',
+						let: {
+							post_id: '$postId',
+						},
+						pipeline: [
+							{
+								$match: {
+									$expr: {
+										$eq: ['$postId', '$$post_id'],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$postId',
+									files: {
+										$push: '$file_path',
+									},
+								},
+							},
+						],
+						as: 'all_files',
+					},
+				},
+				{
+					$sort: { date: -1 },
+				},
+				{
+					$project: {
+						postId: 1,
+						_id: 0,
+						'all_files.files': 1,
+					},
+				},
+				{
+					$unwind: '$all_files',
+				},
+			])
 			.then((reply) => {
 				if (reply.length) {
 					callback('', {
@@ -115,12 +220,41 @@ exports.getMostRatedPostByUserId = (user_id, callback) => {
 					},
 				},
 				{
-					$project: {
-						'ratings._id': 0,
+					$lookup: {
+						from: 'postfiles',
+						let: {
+							post_id: '$postId',
+						},
+						pipeline: [
+							{
+								$match: {
+									$expr: {
+										$eq: ['$postId', '$$post_id'],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$postId',
+									files: {
+										$push: '$file_path',
+									},
+								},
+							},
+						],
+						as: 'all_files',
 					},
 				},
 				{
 					$unwind: '$ratings',
+				},
+				{
+					$project: {
+						postId: 1,
+						_id: 0,
+						ratings: 1,
+						'all_files.files': 1,
+					},
 				},
 				{
 					$sort: { 'ratings.avgRating': -1 },
