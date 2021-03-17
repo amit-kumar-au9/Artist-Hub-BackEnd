@@ -52,17 +52,6 @@ exports.getPostDetailByPostId = (req, res, next) => {
 	}
 };
 
-exports.geAllPostByUser = (req, res, next) => {
-	try {
-		postModel.geAllPostByUser(req.params.userId, (err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
 exports.deletePost = (req, res, next) => {
 	try {
 		const deleteFor = {
@@ -100,39 +89,6 @@ exports.unpinPost = (req, res, next) => {
 			userId: req.userData._id,
 		};
 		postModel.unpinPost(unpinFor, (err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
-exports.getAllPinnedPostByUser = (req, res, next) => {
-	try {
-		postModel.getAllPinnedPostByUser(req.userData._id, (err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
-exports.getAllPost = (req, res, next) => {
-	try {
-		postModel.getAllPost((err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
-exports.getMostRatedPostByUserId = (req, res, next) => {
-	try {
-		postModel.getMostRatedPostByUserId(req.params.userId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});

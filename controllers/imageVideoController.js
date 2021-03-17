@@ -9,7 +9,6 @@ exports.addImage = (req, res, next) => {
 			imageFile.tempFilePath,
 			{ folder: 'post_files' },
 			(err, reply) => {
-				console.log(reply);
 				if (err) throw err;
 				const data = {
 					postId: req.body.postId,

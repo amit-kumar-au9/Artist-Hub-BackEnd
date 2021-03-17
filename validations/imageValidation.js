@@ -8,11 +8,18 @@ const imageType = [
 ];
 
 exports.ImageValidation = (req, res, next) => {
-	if (!imageType.includes(req.files.imageFile.mimetype)) {
-		return res.status(400).json({
-			message: 'Invalid file type',
+	if (req.files) {
+		if (req.files && !imageType.includes(req.files.imageFile.mimetype)) {
+			return res.json({
+				message: 'Invalid file type',
+				status: 300,
+				error: 'Please upload file in image type ie png, jpg, jpeg',
+			});
+		}
+	} else {
+		return res.json({
+			message: 'Image not present',
 			status: 300,
-			error: 'Please upload file in image type ie png, jpg, jpeg',
 		});
 	}
 	next();
@@ -20,7 +27,7 @@ exports.ImageValidation = (req, res, next) => {
 
 exports.ProfileImageValidation = (req, res, next) => {
 	if (req.files && !imageType.includes(req.files.imageFile.mimetype)) {
-		return res.status(400).json({
+		return res.json({
 			message: 'Invalid file type',
 			status: 300,
 			error: 'Please upload file in image type ie png, jpg, jpeg',

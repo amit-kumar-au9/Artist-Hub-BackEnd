@@ -4,13 +4,9 @@ const {
 	addPost,
 	updatePost,
 	getPostDetailByPostId,
-	geAllPostByUser,
 	deletePost,
 	pinPost,
 	unpinPost,
-	getAllPost,
-	getAllPinnedPostByUser,
-	getMostRatedPostByUserId,
 } = require('../controllers/postController');
 
 const { newPostValidation } = require('../validations/postValidation');
@@ -18,12 +14,8 @@ const { newPostValidation } = require('../validations/postValidation');
 Router.post('/addPost', newPostValidation, addPost);
 Router.post('/updatePost/:postId', newPostValidation, updatePost);
 Router.get('/getPostDetail/:postId', getPostDetailByPostId);
-Router.get('/getPostByUser/:userId', geAllPostByUser);
 Router.get('/deletePost/:postId', deletePost);
 Router.get('/pinPost/:postId', pinPost);
 Router.get('/unpinPost/:postId', unpinPost);
-Router.get('/getAllPost', getAllPost);
-Router.get('/getPinnedPostByUser', getAllPinnedPostByUser);
-Router.get('/getMostRatedPostByUserId/:userId', getMostRatedPostByUserId);
 
 module.exports = Router;

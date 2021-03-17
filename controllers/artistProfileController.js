@@ -1,6 +1,5 @@
 const fs = require('fs');
 const cloudinary = require('../utils/cloudinary');
-const path = '../tmp';
 
 const artistProfileModel = require('../models/artistProfileModel');
 
@@ -141,6 +140,45 @@ exports.getDetails = (req, res, next) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getAllPostByUser = (req, res, next) => {
+	try {
+		artistProfileModel.getAllPostByUser(req.params.userId, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getAllPinnedPostByUser = (req, res, next) => {
+	try {
+		artistProfileModel.getAllPinnedPostByUser(
+			req.userData._id,
+			(err, reply) => {
+				if (err) throw err;
+				return res.json(reply);
+			},
+		);
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.getMostRatedPostByUserId = (req, res, next) => {
+	try {
+		artistProfileModel.getMostRatedPostByUserId(
+			req.params.userId,
+			(err, reply) => {
+				if (err) throw err;
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		next(error);
 	}
