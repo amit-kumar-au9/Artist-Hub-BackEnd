@@ -129,3 +129,14 @@ exports.getAllPost = (req, res, next) => {
 		next(error);
 	}
 };
+
+exports.getMostRatedPostByUserId = (req, res, next) => {
+	try {
+		postModel.getMostRatedPostByUserId(req.params.userId, (err, reply) => {
+			if (err) throw err;
+			return res.json(reply);
+		});
+	} catch (error) {
+		next(error);
+	}
+};

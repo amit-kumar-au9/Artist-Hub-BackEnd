@@ -10,6 +10,7 @@ const {
 	unpinPost,
 	getAllPost,
 	getAllPinnedPostByUser,
+	getMostRatedPostByUserId,
 } = require('../controllers/postController');
 
 const { newPostValidation } = require('../validations/postValidation');
@@ -23,5 +24,6 @@ Router.get('/pinPost/:postId', pinPost);
 Router.get('/unpinPost/:postId', unpinPost);
 Router.get('/getAllPost', getAllPost);
 Router.get('/getPinnedPostByUser', getAllPinnedPostByUser);
+Router.get('/getMostRatedPostByUserId/:userId', getMostRatedPostByUserId);
 
 module.exports = Router;
