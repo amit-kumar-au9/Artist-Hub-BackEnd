@@ -23,7 +23,7 @@ exports.getPostForYou = (userId, callback) => {
 				pipeline.followerLookup,
 				{
 					$match: {
-						'users.userId1': userId,
+						'users.userId1': String(userId),
 					},
 				},
 				{
