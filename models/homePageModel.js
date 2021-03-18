@@ -1,4 +1,5 @@
 const postSchema = require('../schema/postSchema');
+const pipeline = require('./pipeline');
 
 exports.getPostForYou = (userId, callback) => {
 	try {
@@ -22,67 +23,12 @@ exports.getMostRatedPost = (callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
-				{
-					$lookup: {
-						from: 'ratings',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									avgRating: { $avg: '$rating' },
-								},
-							},
-						],
-						as: 'ratings',
-					},
-				},
-				{
-					$lookup: {
-						from: 'postfiles',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: { $push: '$file_path' },
-								},
-							},
-						],
-						as: 'all_files',
-					},
-				},
-				{
-					$lookup: {
-						from: 'users',
-						localField: 'userId',
-						foreignField: '_id',
-						as: 'userData',
-					},
-				},
+				pipeline.ratingLookup,
+				pipeline.postFilesLookup,
+				pipeline.userLookup,
 				{
 					$project: {
-						'userData.type': 0.0,
-						'userData.occassions': 0,
-						'userData.email': 0,
-						'userData.password': 0,
-						'userData.coverPic': 0,
-						'userData.shortDesc': 0,
-						'userData.date': 0,
-						'userData.__v': 0,
-						'userData.coverPicId': 0,
-						'userData.profilePicId': 0,
-						'userData._id': 0,
+						...pipeline.userProject,
 						'all_files._id': 0,
 					},
 				},
@@ -121,67 +67,12 @@ exports.getTrendingPost = (callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
-				{
-					$lookup: {
-						from: 'likes',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									likesCount: { $sum: 1 },
-								},
-							},
-						],
-						as: 'likes',
-					},
-				},
-				{
-					$lookup: {
-						from: 'postfiles',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: { $push: '$file_path' },
-								},
-							},
-						],
-						as: 'all_files',
-					},
-				},
-				{
-					$lookup: {
-						from: 'users',
-						localField: 'userId',
-						foreignField: '_id',
-						as: 'userData',
-					},
-				},
+				pipeline.likesLookup,
+				pipeline.postFilesLookup,
+				pipeline.userLookup,
 				{
 					$project: {
-						'userData.type': 0.0,
-						'userData.occassions': 0,
-						'userData.email': 0,
-						'userData.password': 0,
-						'userData.coverPic': 0,
-						'userData.shortDesc': 0,
-						'userData.date': 0,
-						'userData.__v': 0,
-						'userData.coverPicId': 0,
-						'userData.profilePicId': 0,
-						'userData._id': 0,
+						...pipeline.userProject,
 						'all_files._id': 0,
 						'likes._id': 0,
 					},

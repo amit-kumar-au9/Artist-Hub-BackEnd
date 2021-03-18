@@ -1,5 +1,6 @@
 const userSchema = require('../schema/userSchema');
 const postSchema = require('../schema/postSchema');
+const pipeline = require('./pipeline');
 
 exports.updateProfile = (userId, data, callback) => {
 	userSchema
@@ -39,32 +40,7 @@ exports.getAllPostByUser = (userId, callback) => {
 						},
 					},
 				},
-				{
-					$lookup: {
-						from: 'postfiles',
-						let: {
-							post_id: '$postId',
-						},
-						pipeline: [
-							{
-								$match: {
-									$expr: {
-										$eq: ['$postId', '$$post_id'],
-									},
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: {
-										$push: '$file_path',
-									},
-								},
-							},
-						],
-						as: 'all_files',
-					},
-				},
+				pipeline.postFilesLookup,
 				{
 					$sort: { date: -1 },
 				},
@@ -116,32 +92,7 @@ exports.getAllPinnedPostByUser = (userId, callback) => {
 						},
 					},
 				},
-				{
-					$lookup: {
-						from: 'postfiles',
-						let: {
-							post_id: '$postId',
-						},
-						pipeline: [
-							{
-								$match: {
-									$expr: {
-										$eq: ['$postId', '$$post_id'],
-									},
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: {
-										$push: '$file_path',
-									},
-								},
-							},
-						],
-						as: 'all_files',
-					},
-				},
+				pipeline.postFilesLookup,
 				{
 					$sort: { date: -1 },
 				},
@@ -193,60 +144,10 @@ exports.getMostRatedPostByUserId = (user_id, callback) => {
 						},
 					},
 				},
+				pipeline.ratingLookup,
+				pipeline.postFilesLookup,
 				{
-					$lookup: {
-						from: 'ratings',
-						let: {
-							post_id: '$postId',
-						},
-						pipeline: [
-							{
-								$match: {
-									$expr: {
-										$eq: ['$postId', '$$post_id'],
-									},
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									avgRating: {
-										$avg: '$rating',
-									},
-								},
-							},
-						],
-						as: 'ratings',
-					},
-				},
-				{
-					$lookup: {
-						from: 'postfiles',
-						let: {
-							post_id: '$postId',
-						},
-						pipeline: [
-							{
-								$match: {
-									$expr: {
-										$eq: ['$postId', '$$post_id'],
-									},
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: {
-										$push: '$file_path',
-									},
-								},
-							},
-						],
-						as: 'all_files',
-					},
-				},
-				{
-					$unwind: '$ratings',
+					$unwind: '$all_files',
 				},
 				{
 					$project: {

@@ -1,52 +1,22 @@
 const postSchema = require('../schema/postSchema');
+const pipeline = require('./pipeline');
 
 exports.getAllPost = (callback) => {
 	try {
 		postSchema
 			.aggregate([
 				{ $match: { active: 1.0 } },
-				{ $addFields: { postId: { $toString: '$_id' } } },
 				{
-					$lookup: {
-						from: 'postfiles',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: { $push: '$file_path' },
-								},
-							},
-						],
-						as: 'all_files',
+					$addFields: {
+						postId: { $toString: '$_id' },
+						userId: { $toObjectId: '$userId' },
 					},
 				},
-				{ $addFields: { userId: { $toObjectId: '$userId' } } },
-				{
-					$lookup: {
-						from: 'users',
-						localField: 'userId',
-						foreignField: '_id',
-						as: 'userData',
-					},
-				},
+				pipeline.postFilesLookup,
+				pipeline.userLookup,
 				{
 					$project: {
-						'userData.type': 0.0,
-						'userData.occassions': 0,
-						'userData.email': 0,
-						'userData.password': 0,
-						'userData.coverPic': 0,
-						'userData.shortDesc': 0,
-						'userData.date': 0,
-						'userData.__v': 0,
-						'userData.coverPicId': 0,
-						'userData.profilePicId': 0,
+						...pipeline.userProject,
 					},
 				},
 				{ $match: { 'userData.isActive': 1 } },
@@ -78,51 +48,19 @@ exports.getPostByOccasssion = (type, callback) => {
 		postSchema
 			.aggregate([
 				{ $match: { active: 1, occassion: type } },
-				{ $addFields: { postId: { $toString: '$_id' } } },
 				{
-					$lookup: {
-						from: 'postfiles',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: { $push: '$file_path' },
-								},
-							},
-						],
-						as: 'all_files',
+					$addFields: {
+						postId: { $toString: '$_id' },
+						userId: { $toObjectId: '$userId' },
 					},
 				},
-				{ $addFields: { userId: { $toObjectId: '$userId' } } },
-				{
-					$lookup: {
-						from: 'users',
-						localField: 'userId',
-						foreignField: '_id',
-						as: 'userData',
-					},
-				},
+				pipeline.postFilesLookup,
+				pipeline.userLookup,
 				{
 					$project: {
+						...pipeline.userProject,
 						'all_files._id': 0,
 						postId: 0,
-						'userData._id': 0,
-						'userData.type': 0,
-						'userData.occassions': 0,
-						'userData.email': 0,
-						'userData.password': 0,
-						'userData.coverPic': 0,
-						'userData.shortDesc': 0,
-						'userData.date': 0,
-						'userData.__v': 0,
-						'userData.coverPicId': 0,
-						'userData.profilePicId': 0,
 					},
 				},
 				{ $match: { 'userData.isActive': 1 } },
@@ -159,51 +97,19 @@ exports.getPostByTag = (tag, callback) => {
 						tags: { $in: [new RegExp(tag)] },
 					},
 				},
-				{ $addFields: { postId: { $toString: '$_id' } } },
 				{
-					$lookup: {
-						from: 'postfiles',
-						let: { post_id: '$postId' },
-						pipeline: [
-							{
-								$match: {
-									$expr: { $eq: ['$postId', '$$post_id'] },
-								},
-							},
-							{
-								$group: {
-									_id: '$postId',
-									files: { $push: '$file_path' },
-								},
-							},
-						],
-						as: 'all_files',
+					$addFields: {
+						postId: { $toString: '$_id' },
+						userId: { $toObjectId: '$userId' },
 					},
 				},
-				{ $addFields: { userId: { $toObjectId: '$userId' } } },
-				{
-					$lookup: {
-						from: 'users',
-						localField: 'userId',
-						foreignField: '_id',
-						as: 'userData',
-					},
-				},
+				pipeline.postFilesLookup,
+				pipeline.userLookup,
 				{
 					$project: {
+						...pipeline.userProject,
 						'all_files._id': 0,
 						postId: 0,
-						'userData._id': 0,
-						'userData.type': 0,
-						'userData.occassions': 0,
-						'userData.email': 0,
-						'userData.password': 0,
-						'userData.coverPic': 0,
-						'userData.shortDesc': 0,
-						'userData.date': 0,
-						'userData.__v': 0,
-						'userData.coverPicId': 0,
-						'userData.profilePicId': 0,
 					},
 				},
 				{ $match: { 'userData.isActive': 1 } },
