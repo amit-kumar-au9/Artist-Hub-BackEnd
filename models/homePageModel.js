@@ -4,18 +4,8 @@ exports.getAllPost = (callback) => {
 	try {
 		postSchema
 			.aggregate([
-				{
-					$match: {
-						active: 1.0,
-					},
-				},
-				{
-					$addFields: {
-						userId: {
-							$toObjectId: '$userId',
-						},
-					},
-				},
+				{ $match: { active: 1.0 } },
+				{ $addFields: { userId: { $toObjectId: '$userId' } } },
 				{
 					$lookup: {
 						from: 'users',
@@ -40,11 +30,7 @@ exports.getAllPost = (callback) => {
 					},
 				},
 				{ $match: { 'userData.isActive': 1 } },
-				{
-					$sort: {
-						date: -1.0,
-					},
-				},
+				{ $sort: { date: -1.0 } },
 			])
 			.then((reply) => {
 				if (reply.length) {
@@ -61,6 +47,72 @@ exports.getAllPost = (callback) => {
 				}
 			})
 			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getPostForYou = (userId, callback) => {
+	try {
+		callback('', {
+			message: 'Logic not ready',
+			status: 400,
+		});
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getLatestPost = (userId, callback) => {
+	try {
+		callback('', {
+			message: 'Logic not ready',
+			status: 400,
+		});
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getMostRatedPost = (userId, callback) => {
+	try {
+		callback('', {
+			message: 'Logic not ready',
+			status: 400,
+		});
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getTrendingPost = (userId, callback) => {
+	try {
+		callback('', {
+			message: 'Logic not ready',
+			status: 400,
+		});
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getPostByOccasssion = (userId, callback) => {
+	try {
+		callback('', {
+			message: 'Logic not ready',
+			status: 400,
+		});
+	} catch (error) {
+		callback(error);
+	}
+};
+
+exports.getPostByTag = (userId, callback) => {
+	try {
+		callback('', {
+			message: 'Logic not ready',
+			status: 400,
+		});
 	} catch (error) {
 		callback(error);
 	}
