@@ -15,7 +15,7 @@ exports.getPostForYou = (req, res, next) => {
 //sort by rating
 exports.getMostRatedPost = (req, res, next) => {
 	try {
-		homePageModel.getMostRatedPost(req.userData._id, (err, reply) => {
+		homePageModel.getMostRatedPost((err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
@@ -27,7 +27,7 @@ exports.getMostRatedPost = (req, res, next) => {
 //sort by likes and rating
 exports.getTrendingPost = (req, res, next) => {
 	try {
-		homePageModel.getTrendingPost(req.userData._id, (err, reply) => {
+		homePageModel.getTrendingPost((err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
