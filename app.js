@@ -16,6 +16,7 @@ const ratingRouter = require('./routes/ratingsRouter');
 const artistProfileRouter = require('./routes/artistProfileRouter');
 const homePageRouter = require('./routes/homePageRouter');
 const explorePageRouter = require('./routes/explorePageRouter');
+const followerRouter = require('./routes/followerRouter');
 
 const app = express();
 app.use(cors()); //enable cors
@@ -36,6 +37,7 @@ app.use('/rating', authChecker, ratingRouter);
 app.use('/artist', authChecker, artistProfileRouter);
 app.use('/home', authChecker, homePageRouter);
 app.use('/explore', authChecker, explorePageRouter);
+app.use('/follower', authChecker, followerRouter);
 
 // CONNECT TO DB
 mongoose
