@@ -14,7 +14,6 @@ exports.addFollower = (data, callback) => {
 					followerSchema
 						.create(data)
 						.then((reply) => {
-							console.log(reply);
 							callback('', {
 								message: 'Follower added',
 								status: 200,
