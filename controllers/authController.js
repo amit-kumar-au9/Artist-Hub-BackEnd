@@ -59,6 +59,7 @@ exports.loginUser = (req, res, next) => {
 				email: userData.email,
 				name: userData.name,
 				token: token,
+				type: userData.type,
 			});
 		});
 	} catch (err) {

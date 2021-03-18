@@ -70,6 +70,25 @@ exports.ratingLookup = {
 	},
 };
 
+exports.followerLookup = {
+	$lookup: {
+		from: 'followers',
+		let: {
+			user_id: '$userId',
+		},
+		pipeline: [
+			{
+				$match: {
+					$expr: {
+						$eq: ['$userId2', '$$user_id'],
+					},
+				},
+			},
+		],
+		as: 'users',
+	},
+};
+
 exports.userProject = {
 	'userData.type': 0.0,
 	'userData.occassions': 0,

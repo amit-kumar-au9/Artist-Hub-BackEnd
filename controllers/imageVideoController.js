@@ -1,3 +1,4 @@
+const fs = require('fs');
 const imageModel = require('../models/imageVideoModel');
 
 const cloudinary = require('../utils/cloudinary');
@@ -9,6 +10,7 @@ exports.addImage = (req, res, next) => {
 			imageFile.tempFilePath,
 			{ folder: 'post_files' },
 			(err, reply) => {
+				fs.rmdirSync('tmp', { recursive: true });
 				if (err) throw err;
 				const data = {
 					postId: req.body.postId,
@@ -42,8 +44,12 @@ exports.getPostImages = (req, res, next) => {
 exports.updateImage = (req, res, next) => {
 	try {
 		cloudinary.uploader.destroy(req.body.imageId, (err, reply) => {
-			if (err) throw err;
+			if (err) {
+				fs.rmdirSync('tmp', { recursive: true });
+				throw err;
+			}
 			if (reply.result == 'not found') {
+				fs.rmdirSync('tmp', { recursive: true });
 				res.json({
 					message: reply.result,
 					status: 400,
@@ -56,6 +62,7 @@ exports.updateImage = (req, res, next) => {
 						folder: 'post_files',
 					},
 					(err, uploadReply) => {
+						fs.rmdirSync('tmp', { recursive: true });
 						if (err) throw err;
 						const findData = {
 							cloudinary_id: req.body.imageId,

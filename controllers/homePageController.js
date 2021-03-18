@@ -3,7 +3,7 @@ const homePageModel = require('../models/homePageModel');
 //post of followed artist
 exports.getPostForYou = (req, res, next) => {
 	try {
-		homePageModel.getPostForYou(req.userData._id, (err, reply) => {
+		homePageModel.getPostForYou(req.params.userId, (err, reply) => {
 			if (err) throw err;
 			return res.json(reply);
 		});
