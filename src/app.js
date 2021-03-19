@@ -22,7 +22,7 @@ app.use(
 		secret: session_secret,
 		resave: false,
 		saveUninitialized: true,
-		cookie: { maxAge: 3600000 },
+		cookie: { maxAge: 3600000 * 24 },
 	}),
 );
 app.use(limiter); //applying the rate limit to express
