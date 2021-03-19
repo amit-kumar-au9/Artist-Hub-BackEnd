@@ -1,6 +1,7 @@
 const userSchema = require('../schema/userSchema');
 const postSchema = require('../schema/postSchema');
 const pipeline = require('./pipeline');
+const { page_size } = require('../utils/config');
 
 exports.updateProfile = (userId, data, callback) => {
 	userSchema
@@ -24,7 +25,7 @@ exports.getDetails = (userId, callback) => {
 		.catch((err) => callback(err));
 };
 
-exports.getAllPostByUser = (userId, callback) => {
+exports.getAllPostByUser = (userId, page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -53,6 +54,12 @@ exports.getAllPostByUser = (userId, callback) => {
 				},
 				{
 					$unwind: '$all_files',
+				},
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
 				},
 			])
 			.then((data) => {
@@ -105,6 +112,12 @@ exports.getAllPinnedPostByUser = (userId, callback) => {
 				},
 				{
 					$unwind: '$all_files',
+				},
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
 				},
 			])
 			.then((reply) => {
@@ -159,6 +172,12 @@ exports.getMostRatedPostByUserId = (user_id, callback) => {
 				},
 				{
 					$sort: { 'ratings.avgRating': -1 },
+				},
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
 				},
 			])
 			.then((reply) => {

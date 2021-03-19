@@ -147,10 +147,14 @@ exports.getDetails = (req, res, next) => {
 
 exports.getAllPostByUser = (req, res, next) => {
 	try {
-		artistProfileModel.getAllPostByUser(req.params.userId, (err, reply) => {
-			if (err) throw err;
-			return res.json(reply);
-		});
+		artistProfileModel.getAllPostByUser(
+			req.params.userId,
+			req.query.page_no,
+			(err, reply) => {
+				if (err) throw err;
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -160,6 +164,7 @@ exports.getAllPinnedPostByUser = (req, res, next) => {
 	try {
 		artistProfileModel.getAllPinnedPostByUser(
 			req.params.userId,
+			req.query.page_no,
 			(err, reply) => {
 				if (err) throw err;
 				return res.json(reply);
@@ -174,6 +179,7 @@ exports.getMostRatedPostByUserId = (req, res, next) => {
 	try {
 		artistProfileModel.getMostRatedPostByUserId(
 			req.params.userId,
+			req.query.page_no,
 			(err, reply) => {
 				if (err) throw err;
 				return res.json(reply);

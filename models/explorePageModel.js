@@ -1,7 +1,8 @@
 const postSchema = require('../schema/postSchema');
 const pipeline = require('./pipeline');
+const { page_size } = require('../utils/config');
 
-exports.getAllPost = (callback) => {
+exports.getAllPost = (page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -22,6 +23,12 @@ exports.getAllPost = (callback) => {
 				{ $match: { 'userData.isActive': 1 } },
 				{ $sort: { date: -1.0 } },
 				{ $unwind: '$all_files' },
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
+				},
 			])
 			.then((reply) => {
 				if (reply.length) {
@@ -43,7 +50,7 @@ exports.getAllPost = (callback) => {
 	}
 };
 
-exports.getPostByOccasssion = (type, callback) => {
+exports.getPostByOccasssion = (type, page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -66,6 +73,12 @@ exports.getPostByOccasssion = (type, callback) => {
 				{ $match: { 'userData.isActive': 1 } },
 				{ $sort: { date: -1 } },
 				{ $unwind: '$all_files' },
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
+				},
 			])
 			.then((reply) => {
 				if (reply.length) {
@@ -87,7 +100,7 @@ exports.getPostByOccasssion = (type, callback) => {
 	}
 };
 
-exports.getPostByTag = (tag, callback) => {
+exports.getPostByTag = (tag, page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -115,6 +128,12 @@ exports.getPostByTag = (tag, callback) => {
 				{ $match: { 'userData.isActive': 1 } },
 				{ $sort: { date: -1 } },
 				{ $unwind: '$all_files' },
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
+				},
 			])
 			.then((reply) => {
 				if (reply.length) {

@@ -1,8 +1,9 @@
 const postSchema = require('../schema/postSchema');
 const pipeline = require('./pipeline');
+const { page_size } = require('../utils/config');
 
 // show post of all user in which I am in userId1 in 'follower' collection
-exports.getPostForYou = (userId, callback) => {
+exports.getPostForYou = (userId, page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -35,6 +36,12 @@ exports.getPostForYou = (userId, callback) => {
 				},
 				{ $match: { 'userData.isActive': 1 } },
 				{ $unwind: '$all_files' },
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
+				},
 			])
 			.then((reply) => {
 				if (reply.length) {
@@ -56,7 +63,7 @@ exports.getPostForYou = (userId, callback) => {
 	}
 };
 
-exports.getMostRatedPost = (callback) => {
+exports.getMostRatedPost = (page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -79,6 +86,12 @@ exports.getMostRatedPost = (callback) => {
 				{ $match: { 'userData.isActive': 1 } },
 				{ $unwind: '$all_files' },
 				{ $sort: { 'ratings.avgRating': -1 } },
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
+				},
 			])
 			.then((reply) => {
 				if (reply.length) {
@@ -100,7 +113,7 @@ exports.getMostRatedPost = (callback) => {
 	}
 };
 
-exports.getTrendingPost = (callback) => {
+exports.getTrendingPost = (page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -124,6 +137,12 @@ exports.getTrendingPost = (callback) => {
 				{ $match: { 'userData.isActive': 1 } },
 				{ $unwind: '$all_files' },
 				{ $sort: { 'likes.likesCount': -1 } },
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
+				},
 			])
 			.then((reply) => {
 				if (reply.length) {
