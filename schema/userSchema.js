@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		default: 'user',
 	},
+	themeColor: {
+		type: String,
+		required: false,
+		default: '#ffffff',
+	},
 	profilePic: {
 		type: String,
 		default: '',

@@ -18,6 +18,7 @@ const homePageRouter = require('./routes/homePageRouter');
 const explorePageRouter = require('./routes/explorePageRouter');
 const followerRouter = require('./routes/followerRouter');
 const saveRouter = require('./routes/saveRouter');
+const settingRouter = require('./routes/settingRouter');
 
 const app = express();
 app.use(cors()); //enable cors
@@ -40,6 +41,7 @@ app.use('/home', authChecker, homePageRouter);
 app.use('/explore', authChecker, explorePageRouter);
 app.use('/follower', authChecker, followerRouter);
 app.use('/save', authChecker, saveRouter);
+app.use('/setting', authChecker, settingRouter);
 
 // CONNECT TO DB
 mongoose
