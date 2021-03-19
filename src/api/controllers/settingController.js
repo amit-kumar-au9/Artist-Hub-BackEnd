@@ -6,11 +6,11 @@ exports.editThemeColor = (req, res, next) => {
 			req.userData._id,
 			req.query.color,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };

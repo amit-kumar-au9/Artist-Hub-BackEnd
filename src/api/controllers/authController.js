@@ -21,11 +21,11 @@ exports.registerUser = (req, res, next) => {
 			};
 		}
 		userAuthModel.registerUser(data, (err, response) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(response);
 		});
 	} catch (err) {
-		next(err);
+		return next(err);
 	}
 };
 
@@ -39,7 +39,7 @@ exports.loginUser = (req, res, next) => {
 			});
 		}
 		userAuthModel.loginUser(req.body.email, (err, userData) => {
-			if (err) throw err;
+			if (err) return next(err);
 			if (!userData) {
 				return res.json({
 					status: 300,
@@ -70,7 +70,7 @@ exports.loginUser = (req, res, next) => {
 			});
 		});
 	} catch (err) {
-		next(err);
+		return next(err);
 	}
 };
 
@@ -78,7 +78,7 @@ exports.logoutUser = (req, res, next) => {
 	try {
 		if (req.session.authToken) {
 			req.session.destroy((err) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json({
 					message: 'User Logged out successfully',
 					status: 200,
@@ -90,7 +90,7 @@ exports.logoutUser = (req, res, next) => {
 				status: 300,
 			});
 		}
-	} catch (error) {
-		next(err);
+	} catch (err) {
+		return next(err);
 	}
 };

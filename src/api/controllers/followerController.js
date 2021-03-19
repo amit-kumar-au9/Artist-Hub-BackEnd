@@ -8,11 +8,11 @@ exports.addFollower = (req, res, next) => {
 			userId2: req.params.userId,
 		};
 		followerModel.addFollower(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -23,11 +23,11 @@ exports.removeFollower = (req, res, next) => {
 			userId2: req.params.userId,
 		};
 		followerModel.removeFollower(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -38,11 +38,11 @@ exports.getFollowerList = (req, res, next) => {
 			userId2: req.params.userId,
 		};
 		followerModel.getFollowerList(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -53,11 +53,11 @@ exports.getFollowerCount = (req, res, next) => {
 			userId2: req.params.userId,
 		};
 		followerModel.getFollowerCount(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -68,11 +68,11 @@ exports.getFollowingList = (req, res, next) => {
 			userId1: req.params.userId,
 		};
 		followerModel.getFollowingList(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -83,11 +83,11 @@ exports.getFollowingCount = (req, res, next) => {
 			userId1: req.params.userId,
 		};
 		followerModel.getFollowingCount(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 

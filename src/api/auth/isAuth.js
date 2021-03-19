@@ -15,6 +15,7 @@ const authChecker = (req, res, next) => {
 							return res.json({
 								status: 500,
 								message: 'DB error',
+								error: err,
 							});
 						if (result) {
 							req.userData = result;
@@ -30,6 +31,7 @@ const authChecker = (req, res, next) => {
 					return res.json({
 						status: 300,
 						message: 'Invalid token id',
+						error: err,
 					});
 				}
 			} else {

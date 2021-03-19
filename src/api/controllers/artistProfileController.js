@@ -93,24 +93,24 @@ exports.editPic = (req, res, next) => {
 		if (req.files && req.body.imageId) {
 			updatePic(data, req, (err, reply) => {
 				fs.rmdirSync('tmp', { recursive: true });
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			});
 		} else if (req.files) {
 			addPic(data, req, (err, reply) => {
 				fs.rmdirSync('tmp', { recursive: true });
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			});
 		} else if (req.body.imageId) {
 			removePic(data, req, (err, reply) => {
 				fs.rmdirSync('tmp', { recursive: true });
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			});
 		}
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -123,25 +123,25 @@ exports.editDetails = (req, res, next) => {
 			name: req.body.name,
 		};
 		artistProfileModel.updateProfile(req.userData._id, data, (err) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json({
 				message: 'Profile details updated',
 				status: 200,
 			});
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
 exports.getDetails = (req, res, next) => {
 	try {
 		artistProfileModel.getDetails(req.userData._id, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -151,12 +151,12 @@ exports.getAllPostByUser = (req, res, next) => {
 			req.params.userId,
 			req.query.page_no,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -166,12 +166,12 @@ exports.getAllPinnedPostByUser = (req, res, next) => {
 			req.params.userId,
 			req.query.page_no,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -181,11 +181,11 @@ exports.getMostRatedPostByUserId = (req, res, next) => {
 			req.params.userId,
 			req.query.page_no,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };

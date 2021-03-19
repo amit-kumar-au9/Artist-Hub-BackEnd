@@ -8,44 +8,44 @@ exports.addComment = (req, res, next) => {
 			comment: req.body.comment,
 		};
 		commentsModel.addComment(data, (err, response) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(response);
 		});
-	} catch (error) {
-		next(error);
+	} catch (err) {
+		return next(err);
 	}
 };
 
 exports.getComments = (req, res, next) => {
 	try {
 		commentsModel.getComments(req.params.postId, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
-	} catch (error) {
-		next(error);
+	} catch (err) {
+		return next(err);
 	}
 };
 
 exports.getCommentsCounts = (req, res, next) => {
 	try {
 		commentsModel.getCommentsCounts(req.params.postId, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
-	} catch (error) {
-		next(error);
+	} catch (err) {
+		return next(err);
 	}
 };
 
 exports.deleteComment = (req, res, next) => {
 	try {
 		commentsModel.deleteComment(req.params.commentId, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
-	} catch (error) {
-		next(error);
+	} catch (err) {
+		return next(err);
 	}
 };
 
@@ -58,11 +58,11 @@ exports.updateComment = (req, res, next) => {
 			req.params.commentId,
 			data,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
-	} catch (error) {
-		next(error);
+	} catch (err) {
+		return next(err);
 	}
 };

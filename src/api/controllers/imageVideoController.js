@@ -11,7 +11,7 @@ exports.addImage = (req, res, next) => {
 			{ folder: 'post_files' },
 			(err, reply) => {
 				fs.rmdirSync('tmp', { recursive: true });
-				if (err) throw err;
+				if (err) return next(err);
 				const data = {
 					postId: req.body.postId,
 					file_path: reply.secure_url,
@@ -19,13 +19,13 @@ exports.addImage = (req, res, next) => {
 					isImage: req.body.isImage,
 				};
 				imageModel.addImage(data, (err) => {
-					if (err) throw err;
+					if (err) return next(err);
 					return res.json({ message: 'File Uploaded', status: 200 });
 				});
 			},
 		);
-	} catch (err) {
-		next(err);
+	} catch (error) {
+		return next(error);
 	}
 };
 
@@ -33,11 +33,11 @@ exports.getPostImages = (req, res, next) => {
 	try {
 		const data = { postId: req.params.postId };
 		imageModel.getPostImages(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -46,7 +46,7 @@ exports.updateImage = (req, res, next) => {
 		cloudinary.uploader.destroy(req.body.imageId, (err, reply) => {
 			if (err) {
 				fs.rmdirSync('tmp', { recursive: true });
-				throw err;
+				return next(err);
 			}
 			if (reply.result == 'not found') {
 				fs.rmdirSync('tmp', { recursive: true });
@@ -63,7 +63,7 @@ exports.updateImage = (req, res, next) => {
 					},
 					(err, uploadReply) => {
 						fs.rmdirSync('tmp', { recursive: true });
-						if (err) throw err;
+						if (err) return next(err);
 						const findData = {
 							cloudinary_id: req.body.imageId,
 						};
@@ -75,7 +75,7 @@ exports.updateImage = (req, res, next) => {
 							findData,
 							updateData,
 							(err, response) => {
-								if (err) throw err;
+								if (err) return next(err);
 								res.json(response);
 							},
 						);
@@ -84,14 +84,14 @@ exports.updateImage = (req, res, next) => {
 			}
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
 exports.deleteImage = (req, res, next) => {
 	try {
 		cloudinary.uploader.destroy(req.body.imageId, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			if (reply.result == 'not found') {
 				res.json({
 					message: reply.result,
@@ -100,12 +100,12 @@ exports.deleteImage = (req, res, next) => {
 			} else {
 				const data = { cloudinary_id: req.body.imageId };
 				imageModel.deleteImage(data, (err, response) => {
-					if (err) throw err;
+					if (err) return next(err);
 					res.json(response);
 				});
 			}
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };

@@ -7,12 +7,12 @@ exports.getPostForYou = (req, res, next) => {
 			req.userData._id,
 			req.query.page_no,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -20,11 +20,11 @@ exports.getPostForYou = (req, res, next) => {
 exports.getMostRatedPost = (req, res, next) => {
 	try {
 		homePageModel.getMostRatedPost(req.query.page_no, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -32,10 +32,10 @@ exports.getMostRatedPost = (req, res, next) => {
 exports.getTrendingPost = (req, res, next) => {
 	try {
 		homePageModel.getTrendingPost(req.query.page_no, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };

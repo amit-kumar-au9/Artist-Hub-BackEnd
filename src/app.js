@@ -47,9 +47,9 @@ mongoose
 	.catch((err) => console.log(err));
 
 // default error handler of express
-app.use((err, req, res, next) => {
+app.use(function (err, req, res, next) {
 	res.json({
-		message: 'Error',
+		message: 'Server Error',
 		status: 500,
 		error: err,
 	});

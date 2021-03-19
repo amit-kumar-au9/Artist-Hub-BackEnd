@@ -4,11 +4,11 @@ const explorePageModel = require('../models/explorePageModel');
 exports.getAllPost = (req, res, next) => {
 	try {
 		explorePageModel.getAllPost(req.query.page_no, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -19,12 +19,12 @@ exports.getPostByOccasssion = (req, res, next) => {
 			req.params.type,
 			req.query.page_no,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -35,11 +35,11 @@ exports.getPostByTag = (req, res, next) => {
 			req.params.tag,
 			req.query.page_no,
 			(err, reply) => {
-				if (err) throw err;
+				if (err) return next(err);
 				return res.json(reply);
 			},
 		);
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };

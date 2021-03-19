@@ -11,11 +11,11 @@ exports.addPost = (req, res, next) => {
 			tags: req.body.tags,
 		};
 		postModel.addPost(data, (err, response) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(response);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -33,22 +33,22 @@ exports.updatePost = (req, res, next) => {
 			userId: req.userData._id,
 		};
 		postModel.updatePost(updateFor, data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
 exports.getPostDetailByPostId = (req, res, next) => {
 	try {
 		postModel.getPostDetailByPostId(req.params.postId, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -59,11 +59,11 @@ exports.deletePost = (req, res, next) => {
 			userId: req.userData._id,
 		};
 		postModel.deletePost(deleteFor, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -74,11 +74,11 @@ exports.pinPost = (req, res, next) => {
 			userId: req.userData._id,
 		};
 		postModel.pinPost(pinFor, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -89,10 +89,10 @@ exports.unpinPost = (req, res, next) => {
 			userId: req.userData._id,
 		};
 		postModel.unpinPost(unpinFor, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };

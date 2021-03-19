@@ -8,11 +8,11 @@ exports.savePost = (req, res, next) => {
 			postId: req.params.postId,
 		};
 		savePostModel.savePost(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -23,11 +23,11 @@ exports.removePost = (req, res, next) => {
 			postId: req.params.postId,
 		};
 		savePostModel.removePost(data, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
 
@@ -35,10 +35,10 @@ exports.removePost = (req, res, next) => {
 exports.getAllSavedPost = (req, res, next) => {
 	try {
 		savePostModel.getAllSavedPost(req.userData._id, (err, reply) => {
-			if (err) throw err;
+			if (err) return next(err);
 			return res.json(reply);
 		});
 	} catch (error) {
-		next(error);
+		return next(error);
 	}
 };
