@@ -1,9 +1,10 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const fileUpload = require('express-fileupload');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { mongo_url } = require('./api/utils/config');
+const { mongo_url, session_secret } = require('./api/utils/config');
 // import routes
 const mainRouter = require('./api/routes/index');
 
@@ -16,6 +17,14 @@ const limiter = rateLimit({
 const app = express();
 app.use(cors()); //enable cors
 app.use(express.json()); //enable json
+app.use(
+	session({
+		secret: session_secret,
+		resave: false,
+		saveUninitialized: true,
+		cookie: { maxAge: 3600000 },
+	}),
+);
 app.use(limiter); //applying the rate limit to express
 app.use(fileUpload({ useTempFiles: true })); //enable file upload
 

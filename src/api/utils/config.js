@@ -12,3 +12,5 @@ exports.cloudinary_config = {
 };
 
 exports.page_size = 20;
+
+exports.session_secret = process.env.SESSION_SECRET_KEY;

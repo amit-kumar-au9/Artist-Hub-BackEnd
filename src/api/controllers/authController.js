@@ -20,7 +20,6 @@ exports.registerUser = (req, res, next) => {
 				occassions: req.body.occassions || [],
 			};
 		}
-
 		userAuthModel.registerUser(data, (err, response) => {
 			if (err) throw err;
 			return res.json(response);
@@ -53,6 +52,7 @@ exports.loginUser = (req, res, next) => {
 			var token = jwt.sign({ id: userData._id }, secret, {
 				expiresIn: 86400,
 			});
+			req.session.authToken = token;
 			return res.header('auth-token', token).json({
 				message: 'Login successfull',
 				status: 200,
@@ -63,6 +63,27 @@ exports.loginUser = (req, res, next) => {
 			});
 		});
 	} catch (err) {
+		next(err);
+	}
+};
+
+exports.logoutUser = (req, res, next) => {
+	try {
+		if (req.session.authToken) {
+			req.session.destroy((err) => {
+				if (err) throw err;
+				return res.json({
+					message: 'User Logged out successfully',
+					status: 200,
+				});
+			});
+		} else {
+			return res.json({
+				message: 'User not logged in, login first',
+				status: 300,
+			});
+		}
+	} catch (error) {
 		next(err);
 	}
 };
