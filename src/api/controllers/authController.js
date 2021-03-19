@@ -31,6 +31,13 @@ exports.registerUser = (req, res, next) => {
 
 exports.loginUser = (req, res, next) => {
 	try {
+		if (req.session.authToken) {
+			return res.json({
+				status: 300,
+				message: 'Already logged in',
+				token: req.session.authToken,
+			});
+		}
 		userAuthModel.loginUser(req.body.email, (err, userData) => {
 			if (err) throw err;
 			if (!userData) {
