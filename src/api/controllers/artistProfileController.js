@@ -84,6 +84,12 @@ const addPic = (updateData, req, callback) => {
 };
 
 exports.editPic = (req, res, next) => {
+	if (req.userData.type !== 'artist') {
+		return res.json({
+			message: 'User type is not artist',
+			status: 300,
+		});
+	}
 	try {
 		if (req.params.type == 'coverPic' || req.params.type == 'profilePic') {
 			var data = [`${req.params.type}`, `${req.params.type}Id`];
@@ -136,7 +142,7 @@ exports.editDetails = (req, res, next) => {
 
 exports.getDetails = (req, res, next) => {
 	try {
-		artistProfileModel.getDetails(req.userData._id, (err, reply) => {
+		artistProfileModel.getDetails(req.params.userId, (err, reply) => {
 			if (err) return next(err);
 			return res.json(reply);
 		});
