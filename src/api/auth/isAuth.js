@@ -56,7 +56,7 @@ const { getUserDetail } = require('../models/authModel');
 
 const authChecker = (req, res, next) => {
 	const token = req.header('auth-token');
-	if (!token) return res.json({ status: 200, message: 'User not logged in' });
+	if (!token) return res.json({ status: 300, message: 'User not logged in' });
 	try {
 		const user_id = jwt.verify(token, secret);
 		getUserDetail(user_id.id, (err, result) => {
