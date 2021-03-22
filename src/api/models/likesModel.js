@@ -74,20 +74,30 @@ exports.manageLike = (data, callback) => {
 				likeSchema
 					.deleteOne(data)
 					.then(() => {
-						return callback('', {
-							message: 'Post unliked',
-							status: 200,
-						});
+						likeSchema
+							.countDocuments({ postId: data.postId })
+							.then((reply) => {
+								return callback('', {
+									message: 'Post unliked',
+									status: 200,
+									count: reply,
+								});
+							});
 					})
 					.catch((err) => callback(err));
 			} else {
 				likeSchema
 					.create(data)
 					.then(() => {
-						return callback('', {
-							message: 'Post liked',
-							status: 200,
-						});
+						likeSchema
+							.countDocuments({ postId: data.postId })
+							.then((reply) => {
+								return callback('', {
+									message: 'Post liked',
+									status: 200,
+									count: reply,
+								});
+							});
 					})
 					.catch((err) => callback(err));
 			}
