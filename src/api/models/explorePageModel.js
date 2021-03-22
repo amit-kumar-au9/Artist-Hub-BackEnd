@@ -2,7 +2,7 @@ const postSchema = require('../schema/postSchema');
 const pipeline = require('./pipeline');
 const { page_size } = require('../utils/config');
 
-exports.getAllPost = (page_no, callback) => {
+exports.getAllPost = (page_no, userId, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -18,6 +18,33 @@ exports.getAllPost = (page_no, callback) => {
 				pipeline.avgRatingLookup,
 				pipeline.totalLikesLookup,
 				pipeline.userLookup,
+				{
+					$lookup: {
+						from: 'likes',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isLiked',
+					},
+				},
 				{
 					$project: {
 						...pipeline.userProject,
@@ -53,7 +80,7 @@ exports.getAllPost = (page_no, callback) => {
 	}
 };
 
-exports.getPostByOccasssion = (type, page_no, callback) => {
+exports.getPostByOccasssion = (type, page_no, userId, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -69,6 +96,33 @@ exports.getPostByOccasssion = (type, page_no, callback) => {
 				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
+				{
+					$lookup: {
+						from: 'likes',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isLiked',
+					},
+				},
 				{
 					$project: {
 						...pipeline.userProject,
@@ -106,7 +160,7 @@ exports.getPostByOccasssion = (type, page_no, callback) => {
 	}
 };
 
-exports.getPostByTag = (tag, page_no, callback) => {
+exports.getPostByTag = (tag, page_no, userId, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -127,6 +181,33 @@ exports.getPostByTag = (tag, page_no, callback) => {
 				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
+				{
+					$lookup: {
+						from: 'likes',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isLiked',
+					},
+				},
 				{
 					$project: {
 						...pipeline.userProject,

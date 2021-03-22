@@ -4,8 +4,8 @@ const homePageModel = require('../models/homePageModel');
 exports.getPostForYou = (req, res, next) => {
 	try {
 		homePageModel.getPostForYou(
-			req.userData._id,
 			req.query.page_no,
+			req.userData._id,
 			(err, reply) => {
 				if (err) return next(err);
 				return res.json(reply);
@@ -19,10 +19,14 @@ exports.getPostForYou = (req, res, next) => {
 //sort by rating
 exports.getMostRatedPost = (req, res, next) => {
 	try {
-		homePageModel.getMostRatedPost(req.query.page_no, (err, reply) => {
-			if (err) return next(err);
-			return res.json(reply);
-		});
+		homePageModel.getMostRatedPost(
+			req.query.page_no,
+			req.userData._id,
+			(err, reply) => {
+				if (err) return next(err);
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		return next(error);
 	}
@@ -31,10 +35,14 @@ exports.getMostRatedPost = (req, res, next) => {
 //sort by likes and rating
 exports.getTrendingPost = (req, res, next) => {
 	try {
-		homePageModel.getTrendingPost(req.query.page_no, (err, reply) => {
-			if (err) return next(err);
-			return res.json(reply);
-		});
+		homePageModel.getTrendingPost(
+			req.query.page_no,
+			req.userData._id,
+			(err, reply) => {
+				if (err) return next(err);
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		return next(error);
 	}

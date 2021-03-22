@@ -3,7 +3,7 @@ const pipeline = require('./pipeline');
 const { page_size } = require('../utils/config');
 
 // show post of all user in which I am in userId1 in 'follower' collection
-exports.getPostForYou = (userId, page_no, callback) => {
+exports.getPostForYou = (page_no, userId, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -19,6 +19,33 @@ exports.getPostForYou = (userId, page_no, callback) => {
 				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
+				{
+					$lookup: {
+						from: 'likes',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isLiked',
+					},
+				},
 				{
 					$addFields: {
 						userId: { $toString: '$userId' },
@@ -66,7 +93,7 @@ exports.getPostForYou = (userId, page_no, callback) => {
 	}
 };
 
-exports.getMostRatedPost = (page_no, callback) => {
+exports.getMostRatedPost = (page_no, userId, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -82,6 +109,33 @@ exports.getMostRatedPost = (page_no, callback) => {
 				pipeline.commentsLookup,
 				pipeline.userLookup,
 				pipeline.postFilesLookup,
+				{
+					$lookup: {
+						from: 'likes',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isLiked',
+					},
+				},
 				{
 					$project: {
 						...pipeline.userProject,
@@ -118,7 +172,7 @@ exports.getMostRatedPost = (page_no, callback) => {
 	}
 };
 
-exports.getTrendingPost = (page_no, callback) => {
+exports.getTrendingPost = (page_no, userId, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -134,6 +188,33 @@ exports.getTrendingPost = (page_no, callback) => {
 				pipeline.commentsLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
+				{
+					$lookup: {
+						from: 'likes',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isLiked',
+					},
+				},
 				{
 					$project: {
 						...pipeline.userProject,

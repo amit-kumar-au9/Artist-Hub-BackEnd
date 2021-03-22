@@ -3,10 +3,14 @@ const explorePageModel = require('../models/explorePageModel');
 //sort by time
 exports.getAllPost = (req, res, next) => {
 	try {
-		explorePageModel.getAllPost(req.query.page_no, (err, reply) => {
-			if (err) return next(err);
-			return res.json(reply);
-		});
+		explorePageModel.getAllPost(
+			req.query.page_no,
+			req.userData._id,
+			(err, reply) => {
+				if (err) return next(err);
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		return next(error);
 	}
@@ -18,6 +22,7 @@ exports.getPostByOccasssion = (req, res, next) => {
 		explorePageModel.getPostByOccasssion(
 			req.params.type,
 			req.query.page_no,
+			req.userData._id,
 			(err, reply) => {
 				if (err) return next(err);
 				return res.json(reply);
@@ -34,6 +39,7 @@ exports.getPostByTag = (req, res, next) => {
 		explorePageModel.getPostByTag(
 			req.params.tag,
 			req.query.page_no,
+			req.userData._id,
 			(err, reply) => {
 				if (err) return next(err);
 				return res.json(reply);
