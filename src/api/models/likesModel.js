@@ -1,30 +1,30 @@
 const likeSchema = require('../schema/likesSchema');
 
-exports.addLike = (likeData, callback) => {
-	try {
-		likeSchema
-			.findOne(likeData)
-			.then((reply) => {
-				if (reply) {
-					return callback('', {
-						message: 'Post already liked',
-						status: 300,
-					});
-				} else {
-					likeSchema.create(likeData, (err, _) => {
-						if (err) return callback(err);
-						return callback('', {
-							message: 'Post liked',
-							status: 200,
-						});
-					});
-				}
-			})
-			.catch((err) => callback(err));
-	} catch (error) {
-		callback(error);
-	}
-};
+// exports.addLike = (likeData, callback) => {
+// 	try {
+// 		likeSchema
+// 			.findOne(likeData)
+// 			.then((reply) => {
+// 				if (reply) {
+// 					return callback('', {
+// 						message: 'Post already liked',
+// 						status: 300,
+// 					});
+// 				} else {
+// 					likeSchema.create(likeData, (err, _) => {
+// 						if (err) return callback(err);
+// 						return callback('', {
+// 							message: 'Post liked',
+// 							status: 200,
+// 						});
+// 					});
+// 				}
+// 			})
+// 			.catch((err) => callback(err));
+// 	} catch (error) {
+// 		callback(error);
+// 	}
+// };
 
 exports.getLikes = (postId, callback) => {
 	try {
@@ -67,24 +67,31 @@ exports.getlikeCounts = (postId, callback) => {
 	}
 };
 
-exports.unLike = (data, callback) => {
+exports.manageLike = (data, callback) => {
 	try {
-		likeSchema
-			.findOneAndRemove(data)
-			.then((reply) => {
-				if (reply) {
-					callback('', {
-						message: 'Post unliked',
-						status: 200,
-					});
-				} else {
-					callback('', {
-						message: 'Post like not found',
-						status: 400,
-					});
-				}
-			})
-			.catch((err) => callback(err));
+		likeSchema.findOne(data).then((reply) => {
+			if (reply) {
+				likeSchema
+					.deleteOne(data)
+					.then(() => {
+						return callback('', {
+							message: 'Post unliked',
+							status: 200,
+						});
+					})
+					.catch((err) => callback(err));
+			} else {
+				likeSchema
+					.create(data)
+					.then(() => {
+						return callback('', {
+							message: 'Post liked',
+							status: 200,
+						});
+					})
+					.catch((err) => callback(err));
+			}
+		});
 	} catch (error) {
 		callback(error);
 	}

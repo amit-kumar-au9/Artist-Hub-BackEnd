@@ -1,19 +1,19 @@
 const likeModel = require('../models/likesModel');
 
-exports.addLike = (req, res, next) => {
-	try {
-		const data = {
-			postId: req.params.postId,
-			userId: req.userData._id,
-		};
-		likeModel.addLike(data, (err, response) => {
-			if (err) return next(err);
-			return res.json(response);
-		});
-	} catch (error) {
-		return next(error);
-	}
-};
+// exports.addLike = (req, res, next) => {
+// 	try {
+// 		const data = {
+// 			postId: req.params.postId,
+// 			userId: req.userData._id,
+// 		};
+// 		likeModel.addLike(data, (err, response) => {
+// 			if (err) return next(err);
+// 			return res.json(response);
+// 		});
+// 	} catch (error) {
+// 		return next(error);
+// 	}
+// };
 
 exports.getLikes = (req, res, next) => {
 	try {
@@ -37,13 +37,13 @@ exports.getlikeCounts = (req, res, next) => {
 	}
 };
 
-exports.unLike = (req, res, next) => {
+exports.manageLike = (req, res, next) => {
 	try {
 		const data = {
 			postId: req.params.postId,
 			userId: req.userData._id,
 		};
-		likeModel.unLike(data, (err, reply) => {
+		likeModel.manageLike(data, (err, reply) => {
 			if (err) return next(err);
 			return res.json(reply);
 		});
