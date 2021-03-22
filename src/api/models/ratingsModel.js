@@ -1,4 +1,5 @@
 const ratingSchema = require('../schema/ratingSchema');
+const pipeline = require('./pipeline');
 
 exports.addRating = (findBy, data, callback) => {
 	try {
@@ -27,20 +28,30 @@ exports.addRating = (findBy, data, callback) => {
 exports.getRatings = (postId, callback) => {
 	try {
 		ratingSchema
-			.find({ postId: postId })
+			.aggregate([
+				{ $match: { postId: postId } },
+				{
+					$addFields: {
+						userId: { $toObjectId: '$userId' },
+					},
+				},
+				pipeline.userLookup,
+				{
+					$project: {
+						...pipeline.userProject,
+						postId: 0,
+					},
+				},
+				{
+					$sort: { date: -1 },
+				},
+			])
 			.then((data) => {
-				if (data.length != 0) {
-					return callback('', {
-						message: 'All Rating data send',
-						status: 200,
-						data: data,
-					});
-				} else {
-					return callback('', {
-						message: 'Post Rating not found',
-						status: 400,
-					});
-				}
+				return callback('', {
+					message: 'All Rating data send',
+					status: 200,
+					data: data,
+				});
 			})
 			.catch((err) => {
 				return callback(err);

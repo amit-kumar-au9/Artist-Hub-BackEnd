@@ -67,6 +67,7 @@ exports.loginUser = (req, res, next) => {
 				name: userData.name,
 				token: token,
 				type: userData.type,
+				userId: userData._id,
 			});
 		});
 	} catch (err) {
