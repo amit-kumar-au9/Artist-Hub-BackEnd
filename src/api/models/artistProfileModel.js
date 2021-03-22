@@ -82,7 +82,7 @@ exports.getAllPostByUser = (userId, page_no, callback) => {
 	}
 };
 
-exports.getAllPinnedPostByUser = (userId, callback) => {
+exports.getAllPinnedPostByUser = (userId, page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([
@@ -140,7 +140,7 @@ exports.getAllPinnedPostByUser = (userId, callback) => {
 	}
 };
 
-exports.getMostRatedPostByUserId = (user_id, callback) => {
+exports.getMostRatedPostByUserId = (user_id, page_no, callback) => {
 	try {
 		postSchema
 			.aggregate([

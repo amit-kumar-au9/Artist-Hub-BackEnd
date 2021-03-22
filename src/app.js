@@ -51,7 +51,7 @@ app.use(function (err, req, res, next) {
 	res.json({
 		message: 'Server Error',
 		status: 500,
-		error: err,
+		error: err.toString(),
 	});
 });
 
