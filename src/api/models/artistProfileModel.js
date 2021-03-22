@@ -42,6 +42,9 @@ exports.getAllPostByUser = (userId, page_no, callback) => {
 					},
 				},
 				pipeline.postFilesLookup,
+				pipeline.totalLikesLookup,
+				pipeline.commentsLookup,
+				pipeline.avgRatingLookup,
 				{
 					$sort: { date: -1 },
 				},
@@ -99,6 +102,9 @@ exports.getAllPinnedPostByUser = (userId, page_no, callback) => {
 						},
 					},
 				},
+				pipeline.avgRatingLookup,
+				pipeline.totalLikesLookup,
+				pipeline.commentsLookup,
 				pipeline.postFilesLookup,
 				{
 					$sort: { date: -1 },
@@ -157,7 +163,9 @@ exports.getMostRatedPostByUserId = (user_id, page_no, callback) => {
 						},
 					},
 				},
-				pipeline.ratingLookup,
+				pipeline.avgRatingLookup,
+				pipeline.totalLikesLookup,
+				pipeline.commentsLookup,
 				pipeline.postFilesLookup,
 				{
 					$unwind: '$all_files',

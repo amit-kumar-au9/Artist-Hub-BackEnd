@@ -14,6 +14,9 @@ exports.getAllPost = (page_no, callback) => {
 					},
 				},
 				pipeline.postFilesLookup,
+				pipeline.commentsLookup,
+				pipeline.avgRatingLookup,
+				pipeline.totalLikesLookup,
 				pipeline.userLookup,
 				{
 					$project: {
@@ -61,6 +64,9 @@ exports.getPostByOccasssion = (type, page_no, callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
+				pipeline.avgRatingLookup,
+				pipeline.commentsLookup,
+				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
 				{
@@ -116,6 +122,9 @@ exports.getPostByTag = (tag, page_no, callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
+				pipeline.avgRatingLookup,
+				pipeline.commentsLookup,
+				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
 				{

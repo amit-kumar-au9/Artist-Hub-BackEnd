@@ -14,6 +14,9 @@ exports.getPostForYou = (userId, page_no, callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
+				pipeline.avgRatingLookup,
+				pipeline.commentsLookup,
+				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
 				{
@@ -74,9 +77,11 @@ exports.getMostRatedPost = (page_no, callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
-				pipeline.ratingLookup,
-				pipeline.postFilesLookup,
+				pipeline.avgRatingLookup,
+				pipeline.totalLikesLookup,
+				pipeline.commentsLookup,
 				pipeline.userLookup,
+				pipeline.postFilesLookup,
 				{
 					$project: {
 						...pipeline.userProject,
@@ -124,7 +129,9 @@ exports.getTrendingPost = (page_no, callback) => {
 						userId: { $toObjectId: '$userId' },
 					},
 				},
-				pipeline.likesLookup,
+				pipeline.totalLikesLookup,
+				pipeline.avgRatingLookup,
+				pipeline.commentsLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
 				{

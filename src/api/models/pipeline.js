@@ -28,7 +28,7 @@ exports.userLookup = {
 	},
 };
 
-exports.likesLookup = {
+exports.totalLikesLookup = {
 	$lookup: {
 		from: 'likes',
 		let: { post_id: '$postId' },
@@ -49,7 +49,28 @@ exports.likesLookup = {
 	},
 };
 
-exports.ratingLookup = {
+exports.commentsLookup = {
+	$lookup: {
+		from: 'comments',
+		let: { post_id: '$postId' },
+		pipeline: [
+			{
+				$match: {
+					$expr: { $eq: ['$postId', '$$post_id'] },
+				},
+			},
+			{
+				$group: {
+					_id: '$postId',
+					commentsCount: { $sum: 1 },
+				},
+			},
+		],
+		as: 'comments',
+	},
+};
+
+exports.avgRatingLookup = {
 	$lookup: {
 		from: 'ratings',
 		let: { post_id: '$postId' },
