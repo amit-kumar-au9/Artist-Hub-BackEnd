@@ -46,6 +46,33 @@ exports.getAllPost = (page_no, userId, callback) => {
 					},
 				},
 				{
+					$lookup: {
+						from: 'ratings',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isRated',
+					},
+				},
+				{
 					$project: {
 						...pipeline.userProject,
 					},
@@ -121,6 +148,33 @@ exports.getPostByOccasssion = (type, page_no, userId, callback) => {
 							},
 						],
 						as: 'isLiked',
+					},
+				},
+				{
+					$lookup: {
+						from: 'ratings',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isRated',
 					},
 				},
 				{
@@ -206,6 +260,33 @@ exports.getPostByTag = (tag, page_no, userId, callback) => {
 							},
 						],
 						as: 'isLiked',
+					},
+				},
+				{
+					$lookup: {
+						from: 'ratings',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isRated',
 					},
 				},
 				{

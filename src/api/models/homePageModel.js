@@ -47,6 +47,33 @@ exports.getPostForYou = (page_no, userId, callback) => {
 					},
 				},
 				{
+					$lookup: {
+						from: 'ratings',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isRated',
+					},
+				},
+				{
 					$addFields: {
 						userId: { $toString: '$userId' },
 					},
@@ -137,6 +164,33 @@ exports.getMostRatedPost = (page_no, userId, callback) => {
 					},
 				},
 				{
+					$lookup: {
+						from: 'ratings',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isRated',
+					},
+				},
+				{
 					$project: {
 						...pipeline.userProject,
 						'all_files._id': 0,
@@ -213,6 +267,33 @@ exports.getTrendingPost = (page_no, userId, callback) => {
 							},
 						],
 						as: 'isLiked',
+					},
+				},
+				{
+					$lookup: {
+						from: 'ratings',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									files: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isRated',
 					},
 				},
 				{
