@@ -29,6 +29,46 @@ exports.savePost = (data, callback) => {
 	}
 };
 
+exports.manageSave = (data, callback) => {
+	try {
+		saveSchema
+			.findOne(data)
+			.then((reply) => {
+				if (reply) {
+					saveSchema
+						.deleteOne(data)
+						.then(() => {
+							saveSchema
+								.countDocuments({ postId: data.postId })
+								.then((reply) => {
+									return callback('', {
+										message: 'Post unsaved',
+										status: 200,
+										count: reply,
+									});
+								});
+						})
+						.catch((err) => callback(err));
+				} else {
+					saveSchema.create(data).then(() => {
+						saveSchema
+							.countDocuments({ postId: data.postId })
+							.then((reply) => {
+								return callback('', {
+									message: 'Post saved',
+									status: 200,
+									count: reply,
+								});
+							});
+					});
+				}
+			})
+			.catch((err) => callback(err));
+	} catch (error) {
+		callback(error);
+	}
+};
+
 exports.removePost = (data, callback) => {
 	try {
 		saveSchema

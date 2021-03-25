@@ -69,39 +69,42 @@ exports.getlikeCounts = (postId, callback) => {
 
 exports.manageLike = (data, callback) => {
 	try {
-		likeSchema.findOne(data).then((reply) => {
-			if (reply) {
-				likeSchema
-					.deleteOne(data)
-					.then(() => {
-						likeSchema
-							.countDocuments({ postId: data.postId })
-							.then((reply) => {
-								return callback('', {
-									message: 'Post unliked',
-									status: 200,
-									count: reply,
+		likeSchema
+			.findOne(data)
+			.then((reply) => {
+				if (reply) {
+					likeSchema
+						.deleteOne(data)
+						.then(() => {
+							likeSchema
+								.countDocuments({ postId: data.postId })
+								.then((reply) => {
+									return callback('', {
+										message: 'Post unliked',
+										status: 200,
+										count: reply,
+									});
 								});
-							});
-					})
-					.catch((err) => callback(err));
-			} else {
-				likeSchema
-					.create(data)
-					.then(() => {
-						likeSchema
-							.countDocuments({ postId: data.postId })
-							.then((reply) => {
-								return callback('', {
-									message: 'Post liked',
-									status: 200,
-									count: reply,
+						})
+						.catch((err) => callback(err));
+				} else {
+					likeSchema
+						.create(data)
+						.then(() => {
+							likeSchema
+								.countDocuments({ postId: data.postId })
+								.then((reply) => {
+									return callback('', {
+										message: 'Post liked',
+										status: 200,
+										count: reply,
+									});
 								});
-							});
-					})
-					.catch((err) => callback(err));
-			}
-		});
+						})
+						.catch((err) => callback(err));
+				}
+			})
+			.catch((err) => callback(err));
 	} catch (error) {
 		callback(error);
 	}

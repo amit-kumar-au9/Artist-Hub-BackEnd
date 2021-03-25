@@ -49,6 +49,27 @@ exports.totalLikesLookup = {
 	},
 };
 
+exports.totalSaveLookup = {
+	$lookup: {
+		from: 'save_posts',
+		let: { post_id: '$postId' },
+		pipeline: [
+			{
+				$match: {
+					$expr: { $eq: ['$postId', '$$post_id'] },
+				},
+			},
+			{
+				$group: {
+					_id: '$postId',
+					saveCount: { $sum: 1 },
+				},
+			},
+		],
+		as: 'saved',
+	},
+};
+
 exports.commentsLookup = {
 	$lookup: {
 		from: 'comments',
