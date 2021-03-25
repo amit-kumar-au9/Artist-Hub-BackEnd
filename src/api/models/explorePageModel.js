@@ -150,6 +150,7 @@ exports.getPostByOccasssion = (type, page_no, userId, callback) => {
 				pipeline.commentsLookup,
 				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
+				pipeline.totalSaveLookup,
 				pipeline.userLookup,
 				{
 					$lookup: {
@@ -203,6 +204,33 @@ exports.getPostByOccasssion = (type, page_no, userId, callback) => {
 							},
 						],
 						as: 'isRated',
+					},
+				},
+				{
+					$lookup: {
+						from: 'save_posts',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									save: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isSaved',
 					},
 				},
 				{
@@ -262,6 +290,7 @@ exports.getPostByTag = (tag, page_no, userId, callback) => {
 				pipeline.commentsLookup,
 				pipeline.totalLikesLookup,
 				pipeline.postFilesLookup,
+				pipeline.totalSaveLookup,
 				pipeline.userLookup,
 				{
 					$lookup: {
@@ -315,6 +344,33 @@ exports.getPostByTag = (tag, page_no, userId, callback) => {
 							},
 						],
 						as: 'isRated',
+					},
+				},
+				{
+					$lookup: {
+						from: 'save_posts',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									save: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isSaved',
 					},
 				},
 				{

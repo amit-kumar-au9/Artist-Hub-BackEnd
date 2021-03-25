@@ -17,6 +17,7 @@ exports.getPostForYou = (page_no, userId, callback) => {
 				pipeline.avgRatingLookup,
 				pipeline.commentsLookup,
 				pipeline.totalLikesLookup,
+				pipeline.totalSaveLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
 				{
@@ -71,6 +72,33 @@ exports.getPostForYou = (page_no, userId, callback) => {
 							},
 						],
 						as: 'isRated',
+					},
+				},
+				{
+					$lookup: {
+						from: 'save_posts',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									save: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isSaved',
 					},
 				},
 				{
@@ -134,6 +162,7 @@ exports.getMostRatedPost = (page_no, userId, callback) => {
 				pipeline.avgRatingLookup,
 				pipeline.totalLikesLookup,
 				pipeline.commentsLookup,
+				pipeline.totalSaveLookup,
 				pipeline.userLookup,
 				pipeline.postFilesLookup,
 				{
@@ -188,6 +217,33 @@ exports.getMostRatedPost = (page_no, userId, callback) => {
 							},
 						],
 						as: 'isRated',
+					},
+				},
+				{
+					$lookup: {
+						from: 'save_posts',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									save: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isSaved',
 					},
 				},
 				{
@@ -240,6 +296,7 @@ exports.getTrendingPost = (page_no, userId, callback) => {
 				pipeline.totalLikesLookup,
 				pipeline.avgRatingLookup,
 				pipeline.commentsLookup,
+				pipeline.totalSaveLookup,
 				pipeline.postFilesLookup,
 				pipeline.userLookup,
 				{
@@ -294,6 +351,33 @@ exports.getTrendingPost = (page_no, userId, callback) => {
 							},
 						],
 						as: 'isRated',
+					},
+				},
+				{
+					$lookup: {
+						from: 'save_posts',
+						let: { post_id: '$postId' },
+						pipeline: [
+							{
+								$match: {
+									$expr: { $eq: ['$postId', '$$post_id'] },
+								},
+							},
+							{
+								$match: {
+									$expr: {
+										$eq: ['$userId', String(userId)],
+									},
+								},
+							},
+							{
+								$group: {
+									_id: '$userId',
+									save: { $push: '$postId' },
+								},
+							},
+						],
+						as: 'isSaved',
 					},
 				},
 				{
