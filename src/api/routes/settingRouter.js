@@ -2,6 +2,6 @@ const Router = require('express').Router();
 
 const { editThemeColor } = require('../controllers/settingController');
 
-Router.get('/editThemeColor', editThemeColor);
+Router.post('/editThemeColor', editThemeColor);
 
 module.exports = Router;
