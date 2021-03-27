@@ -1,4 +1,5 @@
 const followerSchema = require('../schema/followerSchema');
+const pipeline = require('./pipeline');
 
 exports.addFollower = (data, callback) => {
 	try {
@@ -13,7 +14,7 @@ exports.addFollower = (data, callback) => {
 				} else {
 					followerSchema
 						.create(data)
-						.then((reply) => {
+						.then(() => {
 							callback('', {
 								message: 'Follower added',
 								status: 200,
@@ -51,10 +52,36 @@ exports.removeFollower = (data, callback) => {
 	}
 };
 
-exports.getFollowerList = (data, callback) => {
+exports.getFollowerList = (userId2, callback) => {
 	try {
 		followerSchema
-			.find(data)
+			.aggregate([
+				{
+					$match: {
+						userId2: userId2,
+					},
+				},
+				{
+					$addFields: {
+						userId2: {
+							$toObjectId: '$userId1',
+						},
+					},
+				},
+				{
+					$lookup: {
+						from: 'users',
+						localField: 'userId1',
+						foreignField: '_id',
+						as: 'userData',
+					},
+				},
+				{
+					$project: {
+						...pipeline.userProject,
+					},
+				},
+			])
 			.then((reply) => {
 				callback('', {
 					message: 'Follower list send',
@@ -85,10 +112,36 @@ exports.getFollowerCount = (data, callback) => {
 	}
 };
 
-exports.getFollowingList = (data, callback) => {
+exports.getFollowingList = (userId1, callback) => {
 	try {
 		followerSchema
-			.find(data)
+			.aggregate([
+				{
+					$match: {
+						userId1: userId1,
+					},
+				},
+				{
+					$addFields: {
+						userId2: {
+							$toObjectId: '$userId2',
+						},
+					},
+				},
+				{
+					$lookup: {
+						from: 'users',
+						localField: 'userId2',
+						foreignField: '_id',
+						as: 'userData',
+					},
+				},
+				{
+					$project: {
+						...pipeline.userProject,
+					},
+				},
+			])
 			.then((reply) => {
 				callback('', {
 					message: 'Following list send',

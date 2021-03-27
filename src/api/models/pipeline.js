@@ -143,4 +143,5 @@ exports.userProject = {
 	'userData.coverPicId': 0,
 	'userData.profilePicId': 0,
 	'userData._id': 0,
+	'userData.themeColor': 0,
 };

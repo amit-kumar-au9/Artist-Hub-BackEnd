@@ -34,10 +34,7 @@ exports.removeFollower = (req, res, next) => {
 // follower means the users which are following me i.e. I am userId2
 exports.getFollowerList = (req, res, next) => {
 	try {
-		const data = {
-			userId2: req.params.userId,
-		};
-		followerModel.getFollowerList(data, (err, reply) => {
+		followerModel.getFollowerList(req.params.userId, (err, reply) => {
 			if (err) return next(err);
 			return res.json(reply);
 		});
@@ -64,10 +61,7 @@ exports.getFollowerCount = (req, res, next) => {
 // following means the users i am following i.e. I am userId1
 exports.getFollowingList = (req, res, next) => {
 	try {
-		const data = {
-			userId1: req.params.userId,
-		};
-		followerModel.getFollowingList(data, (err, reply) => {
+		followerModel.getFollowingList(req.params.userId, (err, reply) => {
 			if (err) return next(err);
 			return res.json(reply);
 		});
