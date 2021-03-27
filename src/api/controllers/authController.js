@@ -67,6 +67,7 @@ exports.loginUser = (req, res, next) => {
 				name: userData.name,
 				token: token,
 				type: userData.type,
+				data: userData,
 				userId: userData._id,
 			});
 		});
@@ -92,6 +93,25 @@ exports.logoutUser = (req, res, next) => {
 			});
 		}
 	} catch (err) {
+		return next(err);
+	}
+};
+
+exports.getUserDetail = (req, res, next) => {
+	try {
+		userAuthModel.getUserDetail(req.userData._id, (err, result) => {
+			if (err) return res.json({ status: 500, message: 'DB error' });
+			return res.json({
+				message: 'User detail',
+				status: 200,
+				email: result.email,
+				name: result.name,
+				type: result.type,
+				data: result,
+				userId: result._id,
+			});
+		});
+	} catch (error) {
 		return next(err);
 	}
 };
