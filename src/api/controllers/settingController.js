@@ -2,7 +2,6 @@ const settingModel = require('../models/settingModel');
 
 exports.editThemeColor = (req, res, next) => {
 	try {
-		console.log('theme', req.userData._id);
 		settingModel.editThemeColor(
 			req.userData._id,
 			req.body.color,
