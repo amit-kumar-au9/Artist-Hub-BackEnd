@@ -24,10 +24,13 @@ exports.addOccasion = (req, res, next) => {
 exports.deleteOccasion = (req, res, next) => {
 	try {
 		if (req.query.name) {
-			occasionListModel.deleteOccasion(req.query.name, (err, reply) => {
-				if (err) return next(err);
-				return res.json(reply);
-			});
+			occasionListModel.deleteOccasion(
+				req.query.name.toLowerCase(),
+				(err, reply) => {
+					if (err) return next(err);
+					return res.json(reply);
+				},
+			);
 		} else {
 			res.json({
 				message: 'Kindly send name',

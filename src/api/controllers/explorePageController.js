@@ -20,7 +20,7 @@ exports.getAllPost = (req, res, next) => {
 exports.getPostByOccasssion = (req, res, next) => {
 	try {
 		explorePageModel.getPostByOccasssion(
-			req.params.type,
+			req.params.type.toLowerCase(),
 			req.query.page_no,
 			req.userData._id,
 			(err, reply) => {
@@ -37,7 +37,7 @@ exports.getPostByOccasssion = (req, res, next) => {
 exports.getPostByTag = (req, res, next) => {
 	try {
 		explorePageModel.getPostByTag(
-			req.params.tag,
+			req.params.tag.toLowerCase(),
 			req.query.page_no,
 			req.userData._id,
 			(err, reply) => {
