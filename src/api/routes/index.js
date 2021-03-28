@@ -27,6 +27,6 @@ indexRouter.use('/explore', authChecker, explorePageRouter);
 indexRouter.use('/follower', authChecker, followerRouter);
 indexRouter.use('/save', authChecker, saveRouter);
 indexRouter.use('/setting', authChecker, settingRouter);
-indexRouter.use('/data/occasion', authChecker, occasionRouter);
+indexRouter.use('/data/occasion', occasionRouter);
 
 module.exports = indexRouter;
