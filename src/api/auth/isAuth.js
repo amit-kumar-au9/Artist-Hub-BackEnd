@@ -23,14 +23,14 @@ const { getUserDetail } = require('../models/authModel');
 // 						} else {
 // 							return res.json({
 // 								status: 300,
-// 								message: 'Invalid token id',
+// 								message: 'Invalid login, Please Login Again',
 // 							});
 // 						}
 // 					});
 // 				} catch (err) {
 // 					return res.json({
 // 						status: 300,
-// 						message: 'Invalid token id',
+// 						message: 'Invalid login, Please Login Again',
 // 						error: err,
 // 					});
 // 				}
@@ -65,11 +65,17 @@ const authChecker = (req, res, next) => {
 				req.userData = result;
 				next();
 			} else {
-				return res.json({ status: 300, message: 'Invalid token id' });
+				return res.json({
+					status: 300,
+					message: 'Login Expired, Please Login Again',
+				});
 			}
 		});
 	} catch (err) {
-		return res.json({ status: 300, message: 'Invalid token id' });
+		return res.json({
+			status: 300,
+			message: 'Login Expired, Please Login Again',
+		});
 	}
 };
 
