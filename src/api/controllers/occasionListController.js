@@ -4,7 +4,7 @@ exports.addOccasion = (req, res, next) => {
 	try {
 		if (req.query.name) {
 			const data = {
-				name: req.query.name,
+				name: req.query.name.toLowerCase(),
 			};
 			occasionListModel.addOccasion(data, (err, reply) => {
 				if (err) return next(err);
