@@ -7,7 +7,7 @@ exports.findByKeyword = (keyword, page_no, callback) => {
 			.aggregate([
 				{
 					$match: {
-						name: { $regex: new RegExp(keyword) },
+						name: { $regex: new RegExp(keyword, 'i') },
 						type: 'artist',
 					},
 				},
