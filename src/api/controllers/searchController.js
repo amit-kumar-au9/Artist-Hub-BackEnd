@@ -9,10 +9,14 @@ exports.findByKeyword = (req, res, next) => {
 				error: 'Keyword cannot be empty',
 			});
 		}
-		searchModel.findByKeyword(req.query.keyword, (err, reply) => {
-			if (err) return next(err);
-			return res.json(reply);
-		});
+		searchModel.findByKeyword(
+			req.query.keyword,
+			req.query.page_no,
+			(err, reply) => {
+				if (err) return next(err);
+				return res.json(reply);
+			},
+		);
 	} catch (error) {
 		return next(error);
 	}

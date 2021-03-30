@@ -1,6 +1,7 @@
 const userSchema = require('../schema/userSchema');
+const { page_size } = require('../utils/config');
 
-exports.findByKeyword = (keyword, callback) => {
+exports.findByKeyword = (keyword, page_no, callback) => {
 	try {
 		userSchema
 			.aggregate([
@@ -9,6 +10,12 @@ exports.findByKeyword = (keyword, callback) => {
 					$sort: {
 						name: 1,
 					},
+				},
+				{
+					$skip: page_size * (page_no - 1),
+				},
+				{
+					$limit: page_size,
 				},
 			])
 			.then((response) => {
