@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const tokenSchema = new Schema({
+const verifyEmailTokenSchema = new Schema({
 	userId: {
 		type: String,
 		required: true,
@@ -12,8 +12,7 @@ const tokenSchema = new Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now,
-		expires: 3600, // this is the expiry time in seconds
 	},
 });
 
-module.exports = mongoose.model('Token', tokenSchema);
+module.exports = mongoose.model('verifyEmailToken', verifyEmailTokenSchema);

@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
 	},
 	isActive: {
 		type: Number,
-		default: 1,
+		default: 0,
 	},
 	coverPic: {
 		type: String,

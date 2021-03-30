@@ -7,6 +7,7 @@ const {
 	getUserDetail,
 	emailExist,
 	passwordReset,
+	verifyEmail,
 } = require('../controllers/authController');
 
 const {
@@ -18,7 +19,10 @@ const {
 Router.post('/registerUser', registerValidation, registerUser);
 Router.post('/loginUser', loginValidation, loginUser);
 Router.get('/logout', logoutUser);
+// get user detail
 Router.get('/getUserDetail', authChecker, getUserDetail);
+// verify email account
+Router.get('/verifyEmail', verifyEmail);
 // forgot password
 Router.get('/emailExist', emailExist);
 Router.post('/passwordReset', resetPassword, passwordReset);

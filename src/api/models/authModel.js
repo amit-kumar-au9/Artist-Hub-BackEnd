@@ -1,5 +1,6 @@
 const userSchema = require('../schema/userSchema');
 const tokenSchema = require('../schema/tokenSchema');
+const verifyEmailTokenSchema = require('../schema/verifyEmailTokenSchema');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
@@ -8,10 +9,11 @@ dotenv.config();
 const { ObjectId } = require('mongodb');
 
 const clientURL = process.env.HOST_URL;
+const backendURL = process.env.BACKEND_URL;
 
 exports.registerUser = (userData, callback) => {
 	try {
-		userSchema.findOne({ email: userData.email }, (err, reply) => {
+		userSchema.findOne({ email: userData.email }, async (err, reply) => {
 			if (err) return callback(err);
 			if (reply)
 				return callback('', {
@@ -19,10 +21,43 @@ exports.registerUser = (userData, callback) => {
 					status: 300,
 				});
 			else {
-				userSchema(userData).save();
-				return callback('', {
-					message: 'Register Successfull',
-					status: 200,
+				const user = await userSchema(userData).save();
+				let verifyToken = crypto.randomBytes(32).toString('hex');
+				const hash = await bcrypt.hash(verifyToken, 8);
+				await new verifyEmailTokenSchema({
+					userId: user._id,
+					token: hash,
+					createdAt: Date.now(),
+				}).save();
+				const link = `${backendURL}/auth/verifyEmail?token=${verifyToken}&id=${user._id}`;
+				var transporter = nodemailer.createTransport({
+					host: process.env.MAIL_HOST,
+					port: process.env.MAIL_PORT,
+					auth: {
+						user: process.env.MAIL_USER,
+						pass: process.env.MAIL_PASSWORD,
+					},
+				});
+				var mailOptions = {
+					from: 'Artist Hub',
+					to: user.email,
+					subject: 'Verify Email',
+					html:
+						'<h4>Hi ' +
+						user.name +
+						'</h4> <p>Verify your account from the given link</p><a href="' +
+						link +
+						'" target="_blank">Verify account Link</a>',
+				};
+				transporter.sendMail(mailOptions, function (error, info) {
+					if (error) {
+						return callback(error);
+					} else {
+						return callback('', {
+							message: 'Register Successfull',
+							status: 200,
+						});
+					}
 				});
 			}
 		});
@@ -142,6 +177,38 @@ exports.passwordReset = async (token, userId, password, callback) => {
 		await passwordResetToken.deleteOne();
 		return callback('', {
 			message: 'Password reset successfully',
+			status: 200,
+		});
+	} catch (err) {
+		return callback(err);
+	}
+};
+
+exports.verifyEmail = async (token, userId, callback) => {
+	try {
+		let verifyEmailToken = await verifyEmailTokenSchema.findOne({
+			userId: userId,
+		});
+		if (!verifyEmailToken) {
+			return callback('', {
+				message: 'Invalid or expired verification token',
+				status: 300,
+			});
+		}
+		const isValid = await bcrypt.compare(token, verifyEmailToken.token);
+		if (!isValid) {
+			return callback('', {
+				message: 'Invalid or expired verification token',
+				status: 300,
+			});
+		}
+		await userSchema.updateOne(
+			{ _id: ObjectId(userId) },
+			{ $set: { isActive: 1 } },
+		);
+		await verifyEmailToken.deleteOne();
+		return callback('', {
+			message: 'Email verified successfully',
 			status: 200,
 		});
 	} catch (err) {
