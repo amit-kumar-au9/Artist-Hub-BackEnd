@@ -115,3 +115,55 @@ exports.getUserDetail = (req, res, next) => {
 		return next(err);
 	}
 };
+
+exports.emailExist = (req, res, next) => {
+	try {
+		userAuthModel.emailExist(req.query.email, (err, result) => {
+			if (err) {
+				console.log(err);
+				return res.json({
+					message: 'DB Error',
+					status: 500,
+					error: err.stack,
+				});
+			}
+			return res.json(result);
+		});
+	} catch (error) {
+		return next(err);
+	}
+};
+
+exports.passwordReset = (req, res, next) => {
+	try {
+		const { token, userId, password } = req.body;
+		userAuthModel.passwordReset(token, userId, password, (err, result) => {
+			if (err)
+				return res.json({
+					message: 'DB Error',
+					status: 500,
+					error: err.stack,
+				});
+			return res.json(result);
+		});
+	} catch (error) {
+		return next(err);
+	}
+};
+
+exports.verifyEmail = (req, res, next) => {
+	try {
+		const { token, id } = req.query;
+		userAuthModel.verifyEmail(token, id, (err, result) => {
+			if (err)
+				return res.json({
+					message: 'DB Error',
+					status: 500,
+					error: err.stack,
+				});
+			return res.json(result);
+		});
+	} catch (error) {
+		return next(err);
+	}
+};
