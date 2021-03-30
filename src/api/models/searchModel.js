@@ -5,7 +5,12 @@ exports.findByKeyword = (keyword, page_no, callback) => {
 	try {
 		userSchema
 			.aggregate([
-				{ $match: { name: { $regex: new RegExp(keyword) } } },
+				{
+					$match: {
+						name: { $regex: new RegExp(keyword) },
+						type: 'artist',
+					},
+				},
 				{
 					$sort: {
 						name: 1,
