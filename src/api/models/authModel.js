@@ -9,7 +9,8 @@ dotenv.config();
 const { ObjectId } = require('mongodb');
 
 const clientURL = process.env.HOST_URL;
-const backendURL = process.env.BACKEND_URL;
+// const backendURL = process.env.BACKEND_URL;
+const backendURL = 'http://localhost:6700';
 
 exports.registerUser = (userData, callback) => {
 	try {
@@ -42,12 +43,10 @@ exports.registerUser = (userData, callback) => {
 					from: 'Artist Hub',
 					to: user.email,
 					subject: 'Verify Email',
-					html:
-						'<h4>Hi ' +
-						user.name +
-						'</h4> <p>Verify your account from the given link</p><a href="' +
-						link +
-						'" target="_blank">Verify account Link</a>',
+					htmk: `<h4>Hi ${user.name}</h4>,
+							<p>We just need to verify your email address before you can access Artist Hub</p>.
+							Verify your email address by clicking here <a href="" target="_blank">link</a>
+							<b>Thanks! – The Artist Hub team</b>`,
 				};
 				transporter.sendMail(mailOptions, function (error, info) {
 					if (error) {

@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../utils/config');
+var path = require('path');
 
 const userAuthModel = require('../models/authModel');
 
@@ -170,6 +171,12 @@ exports.verifyEmail = (req, res, next) => {
 					status: 500,
 					error: err.stack,
 				});
+			console.log(result, __dirname);
+			if (result.status === 200) {
+				return res.sendFile(
+					path.join(__dirname, '..', 'views', 'index.html'),
+				);
+			}
 			return res.json(result);
 		});
 	} catch (error) {
