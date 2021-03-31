@@ -69,12 +69,14 @@ const authChecker = (req, res, next) => {
 					return res.json({
 						status: 300,
 						message: 'Account not verified, Verify the account',
+						error: 'Account not verified, Verify the account',
 					});
 				}
 			} else {
 				return res.json({
 					status: 300,
 					message: 'Login Expired, Please Login Again',
+					error: 'Login Expired, Please Login Again',
 				});
 			}
 		});
@@ -82,6 +84,7 @@ const authChecker = (req, res, next) => {
 		return res.json({
 			status: 300,
 			message: 'Login Expired, Please Login Again',
+			error: 'Login Expired, Please Login Again',
 		});
 	}
 };

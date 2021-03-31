@@ -42,8 +42,9 @@ exports.loginUser = (req, res, next) => {
 			if (err) return next(err);
 			if (!userData) {
 				return res.json({
-					status: 300,
 					message: 'User email doesnot exist',
+					status: 300,
+					error: 'User email doesnot exist',
 				});
 			}
 			const checkPassword = bcrypt.compareSync(
@@ -54,11 +55,13 @@ exports.loginUser = (req, res, next) => {
 				return res.json({
 					message: 'Invalid password',
 					status: 300,
+					error: 'Invalid password',
 				});
 			if (userData.isActive === 0) {
 				return res.json({
 					message: 'Verify your email account and Login Again',
 					status: 300,
+					error: 'Verify your email account and Login Again',
 				});
 			}
 			var token = jwt.sign({ id: userData._id }, secret, {
@@ -95,6 +98,7 @@ exports.logoutUser = (req, res, next) => {
 			return res.json({
 				message: 'User not logged in, login first',
 				status: 300,
+				error: 'User not logged in, login first',
 			});
 		}
 	} catch (err) {
