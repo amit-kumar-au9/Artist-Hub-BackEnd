@@ -20,7 +20,12 @@ const userSchema = new mongoose.Schema({
 	themeColor: {
 		type: Object,
 		required: false,
-		default: '#ffffff',
+		default: {
+			main: '#032541',
+			hover: '#088bf720',
+			active: '#0d7ad3',
+			text: '#ffffff',
+		},
 	},
 	profilePic: {
 		type: String,

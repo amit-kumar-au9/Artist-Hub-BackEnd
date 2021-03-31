@@ -31,20 +31,19 @@ exports.registerUser = (req, res, next) => {
 
 exports.loginUser = (req, res, next) => {
 	try {
-		if (req.session.authToken) {
-			return res.json({
-				status: 300,
-				message: 'Already logged in',
-				token: req.session.authToken,
-			});
-		}
+		// if (req.session.authToken) {
+		// 	return res.json({
+		// 		status: 300,
+		// 		message: 'Already logged in',
+		// 		token: req.session.authToken,
+		// 	});
+		// }
 		userAuthModel.loginUser(req.body.email, (err, userData) => {
 			if (err) return next(err);
 			if (!userData) {
 				return res.json({
 					status: 300,
-					message: 'Login Failed',
-					error: 'User email doesnot exist',
+					message: 'User email doesnot exist',
 				});
 			}
 			const checkPassword = bcrypt.compareSync(
@@ -56,6 +55,12 @@ exports.loginUser = (req, res, next) => {
 					message: 'Invalid password',
 					status: 300,
 				});
+			if (userData.isActive === 0) {
+				return res.json({
+					message: 'Verify your email account and Login Again',
+					status: 300,
+				});
+			}
 			var token = jwt.sign({ id: userData._id }, secret, {
 				expiresIn: 86400,
 			});
