@@ -43,9 +43,9 @@ exports.registerUser = (userData, callback) => {
 					from: 'Artist Hub',
 					to: user.email,
 					subject: 'Verify Email',
-					htmk: `<h4>Hi ${user.name}</h4>,
-							<p>We just need to verify your email address before you can access Artist Hub</p>.
-							Verify your email address by clicking here <a href="" target="_blank">link</a>
+					html: `<h4>Hi ${user.name}</h4>,
+							<p>We just need to verify your email address before you can access Artist Hub.</p>
+							<p>Verify your email address by clicking here <a href="${link}" target="_blank">link</a></p>
 							<b>Thanks! – The Artist Hub team</b>`,
 				};
 				transporter.sendMail(mailOptions, function (error, info) {
