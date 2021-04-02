@@ -53,7 +53,8 @@ exports.registerUser = (userData, callback) => {
 						return callback(error);
 					} else {
 						return callback('', {
-							message: 'Register Successfull',
+							message:
+								'Register Successfull, Check your email to verify account',
 							status: 200,
 						});
 					}
